@@ -48,3 +48,11 @@ export default tseslint.config({
   },
 })
 ```
+
+
+# tech-stack
+- Vite
+- React
+- TypeScript
+- npm
+- TailwindCSS
