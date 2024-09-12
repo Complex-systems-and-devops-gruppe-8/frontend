@@ -1,14 +1,6 @@
 import React from 'react';
 
-
-
-function LandingPage() 
-
-
-
-
-
-{
+function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -38,7 +30,7 @@ function LandingPage()
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white shadow-md p-6 rounded-lg hover:border-purple-400 border-t-4">
               <h3 className="text-2xl font-bold text-purple-700">Game 1</h3>
-              <p className="mt-4 text-gray-700">Blacjack.</p>
+              <p className="mt-4 text-gray-700">Blackjack.</p>
             </div>
             <div className="bg-white shadow-md p-6 rounded-lg hover:border-purple-400 border-t-4">
               <h3 className="text-2xl font-bold text-purple-700">Game 2</h3>
@@ -52,8 +44,6 @@ function LandingPage()
         </div>
       </section>
 
-
-    
       <section id="start" className="bg-purple-700 text-white py-20 text-center">
         <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
         <a href="#signup" className="bg-purple-500 hover:bg-purple-400 text-white py-3 px-6 rounded-lg text-xl">
