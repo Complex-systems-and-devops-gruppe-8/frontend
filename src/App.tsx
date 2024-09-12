@@ -1,58 +1,77 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
-  const [darkMode, setDarkMode] = useState(false)
 
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
-    if (!darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }
 
+function LandingPage() 
+
+
+
+
+
+{
   return (
-    <div className="max-w-screen-xl mx-auto p-8 text-center bg-white dark:bg-gray-900 transition-colors duration-500">
-      <div className="flex justify-between items-center mb-8">
-        <div className="flex space-x-4">
-          <a href="https://vitejs.dev" target="_blank">
-            <img src={viteLogo} className="w-24 p-6 transition-filter duration-300 hover:drop-shadow-[0_0_2em_rgba(100,108,255,0.67)]" alt="Vite logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="w-24 p-6 transition-filter duration-300 hover:drop-shadow-[0_0_2em_rgba(97,218,251,0.67)]" alt="React logo" />
-          </a>
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="bg-purple-700 text-white p-6 flex justify-between items-center">
+        <div className="text-2xl font-bold">Logo</div>
+        <nav>
+          <ul className="flex space-x-3">
+            <li><a href="#home" className="hover:text-purple-300">Home</a></li>
+            <li><a href="#about" className="hover:text-purple-300">About</a></li>
+            <li><a href="#features" className="hover:text-purple-300">Features</a></li>
+            <li><a href="#contact" className="hover:text-purple-300">Contact</a></li>
+          </ul>
+        </nav>
+        <a href="#start" className="bg-purple-500 hover:bg-purple-400 text-white py-2 px-4 rounded-lg">Get Started</a>
+      </header>
+
+      <section id="home" className="bg-gradient-to-r from-purple-200 via-purple-300 to-purple-400 text-center py-20">
+        <h1 className="text-5xl font-bold text-white mb-4">Welcome to Gambling.dk</h1>
+        <a href="#start" className="bg-purple-600 hover:bg-purple-500 text-white py-3 px-6 rounded-lg text-xl">
+          Start Now
+        </a>
+      </section>
+
+      <section id="games" className="bg-purple-50 py-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-4xl font-bold text-purple-700 text-center mb-12">Games</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white shadow-md p-6 rounded-lg hover:border-purple-400 border-t-4">
+              <h3 className="text-2xl font-bold text-purple-700">Game 1</h3>
+              <p className="mt-4 text-gray-700">Blacjack.</p>
+            </div>
+            <div className="bg-white shadow-md p-6 rounded-lg hover:border-purple-400 border-t-4">
+              <h3 className="text-2xl font-bold text-purple-700">Game 2</h3>
+              <p className="mt-4 text-gray-700">Poker.</p>
+            </div>
+            <div className="bg-white shadow-md p-6 rounded-lg hover:border-purple-400 border-t-4">
+              <h3 className="text-2xl font-bold text-purple-700">Game 3</h3>
+              <p className="mt-4 text-gray-700">Roulette.</p>
+            </div>
+          </div>
         </div>
-        {/* Dark mode toggle */}
-        <button
-          onClick={toggleDarkMode}
-          className="bg-gray-300 dark:bg-gray-700 text-black dark:text-white py-2 px-4 rounded-lg focus:outline-none"
-        >
-          {darkMode ? 'Light Mode' : 'Dark Mode'}
-        </button>
-      </div>
-      <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Vite + React</h1>
-      <div className="card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md text-center">
-        <button
-          className="bg-blue-500 text-white py-2 px-4 rounded-lg mb-4"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          count is {count}
-        </button>
-        <p className="text-gray-700 dark:text-gray-300">
-          Edit <code className="bg-gray-100 dark:bg-gray-700 p-1 rounded">src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="text-gray-500 dark:text-gray-400 mt-8">
-        Click on the Vite and React logos to learn more
-      </p>
+      </section>
+
+
+    
+      <section id="start" className="bg-purple-700 text-white py-20 text-center">
+        <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
+        <a href="#signup" className="bg-purple-500 hover:bg-purple-400 text-white py-3 px-6 rounded-lg text-xl">
+          Sign Up Now
+        </a>
+      </section>
+
+      <footer className="bg-purple-900 text-purple-200 py-8">
+        <div className="max-w-6xl mx-auto text-center">
+          <p>&copy; 2024 YourCompany. All rights reserved.</p>
+          <ul className="flex justify-center space-x-6 mt-4">
+            <li><a href="#privacy" className="hover:text-purple-400">Privacy Policy</a></li>
+            <li><a href="#terms" className="hover:text-purple-400">Terms of Service</a></li>
+          </ul>
+        </div>
+      </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default LandingPage;
