@@ -3,6 +3,19 @@ import React from 'react';
 const GamesSection: React.FC = () => {
   const handleGameClick = (gameName: string): void => {
     alert(`You clicked ${gameName}`);
+    switch (gameName) {
+      case 'Blackjack':
+        // Navigate to Blackjack page
+        break;
+      case 'Poker':
+        // Navigate to Poker page
+        break;
+      case 'Roulette':
+        // Navigate to Roulette page
+        break;
+      default:
+        break;
+    }
     // Replace this with actual navigation or action
   };
 
