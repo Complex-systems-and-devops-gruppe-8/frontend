@@ -1,8 +1,26 @@
 import React from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const GamesSection: React.FC = () => {
+  const navigate = useNavigate();
   const handleGameClick = (gameName: string): void => {
+    
     alert(`You clicked ${gameName}`);
+    switch (gameName) {
+      case 'Blackjack':
+        // Navigate to Blackjack page
+        navigate('/blackjack');
+        break;
+      case 'Poker':
+        // Navigate to Poker page
+        navigate('/poker');
+        break;
+      case 'Coinflip':
+        // Navigate to Roulette page
+        navigate('/coinflip');
+        break;
+      default:
+        break;
+    }
     // Replace this with actual navigation or action
   };
 
@@ -27,11 +45,11 @@ const GamesSection: React.FC = () => {
             <p className="mt-4">Click to play Poker.</p>
           </button>
           <button
-            onClick={() => handleGameClick('Roulette')}
+            onClick={() => handleGameClick('Coinflip')}
             className="min-w-[250px] bg-green-900 text-white shadow-md p-6 rounded-lg hover:border-purple-400 border-t-4 cursor-pointer focus:outline-none"
           >
-            <h3 className="text-2xl font-bold">Roulette</h3>
-            <p className="mt-4">Click to play Roulette.</p>
+            <h3 className="text-2xl font-bold">CoinFlip</h3>
+            <p className="mt-4">Click to play CoinFlip.</p>
           </button>
         </div>
       </div>
