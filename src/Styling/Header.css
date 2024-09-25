@@ -19,11 +19,19 @@
   .header.scrolled {
     transform: translateY(-100%);
   }
+  .logo{
+    display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  }
   
   .header-nav {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+    width: 100%;
   }
   
   .header-nav ul {
@@ -89,3 +97,36 @@
     }
   }
   
+  .auth-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem; 
+    margin-right: 1rem;
+    width: 100%;
+    
+  }
+
+  .registerBtn,
+  .loginBtn,
+  .logoutBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2rem;
+    width: 5rem;
+    font-size: small;
+    border-radius: 3px;
+    color: white;
+    background-color: rgb(29, 155, 29);
+    border-color: transparent;
+    
+    
+  }
+
+  .loginBtn
+  {
+    background-color: transparent;
+    border-width: 1px;
+    border-color: white;
+  }
