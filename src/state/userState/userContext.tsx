@@ -29,13 +29,13 @@ import {
     dispatch: Dispatch<UserAction>
     login: (credentials: {
       email: string
-      customer_password: string
+      user_password: string
     }) => Promise<void>
     
     register: (credentials: {
       email: string
-      customer_password: string
-      customer_name: string
+      user_password: string
+      user_name: string
       phone_number: string
     }) => Promise<void>
   }>({
@@ -49,7 +49,7 @@ import {
     const [state, dispatch] = useReducer(userReducer, initialState)
   
     const login = useCallback(
-      async (credentials: { email: string; customer_password: string }) => {
+      async (credentials: { email: string; user_password: string }) => {
         try {
           const response = await fetch(
             'TheApiUrlHereForLoginEndpoint/login',
@@ -65,8 +65,8 @@ import {
             dispatch({
               type: 'LOGIN_SUCCESS',
               payload: {
-                user_id: data.customer_id,
-                user_name: data.customer_name,
+                user_id: data.user_id,
+                user_name: data.user_name,
                 token: data.token,
                 message: data.message,
               },
@@ -91,8 +91,8 @@ import {
   
     const handleCheckCredentials = (credentials: {
       email: string
-      customer_password: string
-      customer_name: string
+      user_password: string
+      user_name: string
       phone_number: string
     }) => {
   
@@ -104,13 +104,13 @@ import {
       }
   
   
-      if (credentials.customer_password.length < 8 || credentials.customer_password.length > 20) {
+      if (credentials.user_password.length < 8 || credentials.user_password.length > 20) {
         return ("Registration failed: Password must be between 8 and 20 characters long.");
       }
   
   
-      if (!credentials.customer_name.trim()) {
-        return ("Registration failed: Customer name cannot be empty.");
+      if (!credentials.user_name.trim()) {
+        return ("Registration failed: User name cannot be empty.");
       }
   
   
@@ -128,8 +128,8 @@ import {
     const register = useCallback(
       async (credentials: {
         email: string
-        customer_password: string
-        customer_name: string
+        user_password: string
+        user_name: string
         phone_number: string
       }) => {
   
