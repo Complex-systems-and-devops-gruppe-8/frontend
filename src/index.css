@@ -1,11 +1,18 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  --main-purple: #6a0dad;
+  --light-purple: #d8bfe6;
+  --dark-purple: #4b0082;
+  --white: #ffffff;
+  --black: #242424;
+
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
 
+  /* Color schemes for light and dark modes */
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: rgba(255, 255, 255, 0.9); /* Text color in dark mode */
+  background-color: var(--black); /* Dark background */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +20,81 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Anchor Links */
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: var(--light-purple); /* Main link color */
+  text-decoration: none;
+  transition: color 0.25s ease;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--main-purple); /* Hover effect */
 }
 
+/* Body Styles */
 body {
   margin: 0;
   display: flex;
   place-items: center;
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--black); /* Ensures background covers full height */
+  color: rgba(255, 255, 255, 0.87); /* Text color in dark mode */
 }
 
+/* Heading Styles */
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--light-purple); /* Header text color */
 }
 
+/* Button Styles */
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  border: 2px solid transparent;
+  padding: 0.8em 1.5em;
+  font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--dark-purple); /* Button background */
+  color: var(--white); /* Button text color */
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--light-purple); /* Border on hover */
+  background-color: var(--main-purple); /* Change background on hover */
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Media Query for Light Mode */
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: var(--dark-purple); /* Text color in light mode */
+    background-color: var(--white); /* Light background */
+  }
+
+  a {
+    color: var(--main-purple); /* Link color in light mode */
   }
   a:hover {
-    color: #747bff;
+    color: var(--dark-purple); /* Hover effect in light mode */
   }
+
+  /* Body text color in light mode */
+  body {
+    color: var(--dark-purple);
+  }
+
+  /* Button styles in light mode */
   button {
-    background-color: #f9f9f9;
+    background-color: var(--light-purple); /* Button background in light mode */
+    color: var(--black); /* Button text color in light mode */
   }
 }
