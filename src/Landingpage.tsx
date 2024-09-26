@@ -1,4 +1,3 @@
-import React from 'react';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import GamesSection from './components/GamesSection';

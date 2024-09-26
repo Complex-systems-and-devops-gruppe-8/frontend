@@ -1,5 +1,3 @@
-import React from 'react';
-
 function StartSection() {
   return (
     <section id="start" className="bg-purple-700 text-white py-20 text-center">
