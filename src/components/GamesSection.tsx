@@ -4,18 +4,17 @@ const GamesSection: React.FC = () => {
   const navigate = useNavigate();
   const handleGameClick = (gameName: string): void => {
     
-    alert(`You clicked ${gameName}`);
     switch (gameName) {
       case 'Blackjack':
-        // Navigate to Blackjack page
+
         navigate('/blackjack');
         break;
       case 'Poker':
-        // Navigate to Poker page
+
         navigate('/poker');
         break;
       case 'Coinflip':
-        // Navigate to Roulette page
+  
         navigate('/coinflip');
         break;
       default:
