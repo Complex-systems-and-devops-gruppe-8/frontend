@@ -4,7 +4,6 @@ const GamesSection: React.FC = () => {
   const navigate = useNavigate();
   const handleGameClick = (gameName: string): void => {
     
-    alert(`You clicked ${gameName}`);
     switch (gameName) {
       case 'Blackjack':
         // Navigate to Blackjack page
