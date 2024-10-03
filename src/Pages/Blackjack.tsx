@@ -1,14 +1,21 @@
 import {Link} from 'react-router-dom';
+import Header from '../components/Header';
+import BlackJackTable from '../components/BlackJackTable';
  
 function BlackjackPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-       <h1 className="text-4xl text-center mt-10">Welcome to Balckjack</h1>
+    <> 
+      <Header />
+
+ 
+      <BlackJackTable />
        <Link to="/"> 
        <button>Go Back</button>
        </Link>
-    </div>
+  
+    </>
   );
+ 
 }
 
 export default BlackjackPage;
