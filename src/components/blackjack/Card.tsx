@@ -1,14 +1,12 @@
 // Card.tsx
 import React from 'react';
-import '../styling/BlackJack.css';
+import '../../styling/BlackJack.css';
+import {CardProps} from '../../types/blackjack';
 
-interface CardProps {
-  type: 'Hearts' | 'Tiles' | 'Pikes' | 'Clovers';  
-  value: string; // This could be something like "A", "2", "10", "K", etc.
-}
+
 
 //  Card component that takes CardProps as a prop
-const Card: React.FC<CardProps> = ({ type, value }) => {
+const Card: React.FC<CardProps> = ({type,value}) => {
   // Step 3: Render the card based on the type and value
   return (
     <section className="card"  >

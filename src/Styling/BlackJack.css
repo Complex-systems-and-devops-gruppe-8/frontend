@@ -1,20 +1,70 @@
-
-.blackjack-table
+.bet-container
 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(55, 79, 79);
+    border-radius: 25%;
+}  
+.coin-btn
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+    background-color: transparent;
+    border-radius: 50%;
+    border: none; /* Remove default button border */
+    transition: background 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+} 
+.coin-btn :hover
+{
+    cursor: pointer;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); /* Glowing light effect */
+    outline: none;
+    border-color: transparent;
+}
+.bet-controller{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     margin-top: 20px;
-    width: 100vh;
-    height: 80vh;
-    border-radius: 50px;
+   
+}
+.coin-container
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+ 
+} 
+.blackjack-table {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100vh; /* Width of the half-circle */
+    height: 500px; /* Half of the width to create a half-circle */
+    border-bottom-left-radius: 40vh; /* Radius should be half of the width */
+    border-bottom-right-radius: 40vh; /* Radius should be half of the width */
+    overflow: hidden; /* Hide any overflow to maintain shape */
     border-style: solid;
     border-width: 5px;
     border-color: purple;
-     
     background-color: green;
+    margin-top: 71px;
     margin-bottom: 10px;
+    padding-bottom: 10px;
 }
 .card
  {
@@ -25,7 +75,7 @@
  }
 .card img
 {
-    width: 80px;
+    width: 10vm;
     height: 120px;
     margin: 8px;
 }
