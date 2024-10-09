@@ -1,0 +1,23 @@
+.card
+ {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   animation: slideIn 1s forwards;
+ }
+.card img
+{
+    width: 80px;
+    height: 110px;
+    margin: 8px;
+}
+@keyframes slideIn {
+    0% {
+        transform: translateX(-500%); /* Start off-screen to the right */
+        transform: translateY(-500%); /* Start off-screen to the right */
+    }
+    100% {
+        transform: translateX(0); /* End at the final position */
+        transform: translateY(0); /* End at the final position */
+    }
+}

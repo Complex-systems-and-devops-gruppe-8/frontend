@@ -1,18 +1,18 @@
 // Card.tsx
 import React from 'react';
-import '../../styling/BlackJack.css';
-import {CardProps} from '../../types/blackjack';
+import '../../styling/blackjack/Card.css';
+import {Card} from '../../state/blackjackState/blackjackTypes';
 
 
 
 //  Card component that takes CardProps as a prop
-const Card: React.FC<CardProps> = ({type,value}) => {
+const CardComp: React.FC<Card> = ({suit,rank}) => {
   // Step 3: Render the card based on the type and value
   return (
     <section className="card"  >
-        <img className='card_img' src={`../../public/resources/black/${type}_${value}_black.png`} alt={`${value} of ${type}`} />
+        <img className='card_img' src={`../../public/resources/black/${suit}_${rank}_black.png`} alt={`${rank} of ${suit}`} />
     </section>
   );
 };
  
-export default Card;
+export default CardComp;

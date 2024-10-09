@@ -1,4 +1,4 @@
-import '../../Styling/Coin.css';
+import '../../Styling/blackjack/Coin.css';
 
 interface CoinProps {
     color: string;
@@ -8,8 +8,8 @@ interface CoinProps {
     size?: number;
 }
 
-
-function Coin({ color, value, onLeftClick, onRightClick, size = 80 }: CoinProps) {
+//size is the scale of which the coin will be displayed
+function Coin({ color, value, onLeftClick, onRightClick, size = 1 }: CoinProps) {
     const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault(); // Prevent default actions like context menu
     
@@ -26,9 +26,10 @@ function Coin({ color, value, onLeftClick, onRightClick, size = 80 }: CoinProps)
   return (
     <div className="coin"   style={{
         background: gradientBackground, // Set the gradient background
-        border: `25px dashed ${ color}`, // Set border color
-        width: `${size}px`,
-        height: `${size}px`,
+        border: `${size*25}px dashed ${ color}`, // Set border color
+        width: `${size*80}px`,
+        height: `${size*80}px`,
+        fontSize: `${size*25}px`
       }}
       onMouseDown={handleClick} // Use onMouseDown for left-click and right-click
       onContextMenu={(e) => e.preventDefault()} // Prevent default right-click menu

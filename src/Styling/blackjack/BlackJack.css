@@ -7,7 +7,7 @@
     height: 100%;
     width: 100%;
     background-color: rgb(55, 79, 79);
-    border-radius: 25%;
+    border-radius: 5px;
 }  
 .coin-btn
 {
@@ -30,13 +30,13 @@
     outline: none;
     border-color: transparent;
 }
-.bet-controller{
+.bet-controller {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between; /* Distribute space between items */
+    align-items: center; /* Align items vertically in the center */
     margin-top: 20px;
-   
+    width: 50%;
 }
 .coin-container
 {
@@ -54,31 +54,46 @@
     align-items: center;
     justify-content: space-between;
     width: 100vh; /* Width of the half-circle */
-    height: 500px; /* Half of the width to create a half-circle */
+    height: 600px; /* Half of the width to create a half-circle */
     border-bottom-left-radius: 40vh; /* Radius should be half of the width */
     border-bottom-right-radius: 40vh; /* Radius should be half of the width */
     overflow: hidden; /* Hide any overflow to maintain shape */
+    
+    /* Border styles */
     border-style: solid;
-    border-width: 5px;
-    border-color: purple;
-    background-color: green;
+    border-width: 8px;
+    border-color: #5e3a08; /* A more muted color for the border */
+
+    /* Background with texture */
+    background-image: linear-gradient(135deg, #67ac33 25%, #59e32e 25%, #3f6b32 50%, #497726 50%, #5d8a3b 75%, #3f6b32 75%, #3f6b32 100%);
+    background-size: 20px 20px; /* Tile size */
+    
+    
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); 
+    position: relative;  
     margin-top: 71px;
     margin-bottom: 10px;
     padding-bottom: 10px;
+
+     
+    background-color: #005f00;  
+    background-blend-mode: multiply;  
+    color: #a3a010;
 }
-.card
- {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   
- }
-.card img
-{
-    width: 10vm;
-    height: 120px;
-    margin: 8px;
+
+ 
+.blackjack-table:before {
+    content: '';
+    position: absolute;
+    top: 20px;  
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;  
+    color: #ffffff;  
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); 
+    font-family: 'Arial', sans-serif;  
 }
+ 
  .dealer,
  .player{
     display: flex;
@@ -102,3 +117,4 @@
      align-items: center;
      height: 50px;
  }
+ 

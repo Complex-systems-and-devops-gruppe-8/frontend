@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import   { useState, useEffect } from 'react';
 import Coin from './Coin'; // Ensure this path is correct and points to your Coin component
-
+import '../../Styling/blackjack/CoinPile.css';
 interface Coins {
   color: string;
   value: number;
@@ -39,7 +39,7 @@ function CoinPile({ totalBet, coins }: CoinPileProps) {
   return (
     <div className="coin-pile">
       {pile.map((coin, index) => (
-        <Coin key={index} color={coin.color} value={coin.value} size={10} />
+        <Coin key={index} color={coin.color} value={coin.value} size={0.5} />
       ))}
     </div>
   );

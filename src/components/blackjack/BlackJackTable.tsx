@@ -1,44 +1,33 @@
 
-import '../../styling/BlackJack.css';
-import Card from './Card';
-import { useState } from 'react';
-import {CardProps} from '../../types/blackjack';
+import '../../styling//blackjack/BlackJack.css';
+import CardComp from './Card';
+import { useState, useContext } from 'react';
+ 
 import Coin from './Coin';
 import CoinPile from './CoinPile';
+import { BlackJackContext } from '../../state/blackjackState/blackjackContext';
  
  
 
 
 function BlackJackTable()
 {
-    const [playerCards, setPlayerCards] = useState<CardProps[]>([]);
-    const [dealerCards, setDealerCards] = useState<CardProps[]>([]);
+    const { state, dispatch } = useContext(BlackJackContext);
+    console.log(state.coins);
+    
+    
     const [totalBet, setTotalBet] = useState<number>(0);
     // Function to deal a random card
-  const dealCard = (): CardProps => {
-    const ranks: CardProps['value'][] = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-    const suits: CardProps['type'][] = ['Hearts' , 'Tiles' , 'Pikes' , 'Clovers'];
-
-    // Generate a random card by selecting a random rank and suit
-    const randomRank = ranks[Math.floor(Math.random() * ranks.length)];
-    const randomSuit = suits[Math.floor(Math.random() * suits.length)];
-
-   
-    // Return a card object with rank and suit properties
-    return { type: randomSuit, value: randomRank };
-  };
-
-  // Function to deal a card to the player
-  const dealCardToPlayer = () => {
-    const newCard = dealCard();
-    setPlayerCards([...playerCards, newCard]);
-  };
-
-  // Function to deal a card to the dealer
-  const dealCardToDealer = () => {
-    const newCard = dealCard();
-    setDealerCards([...dealerCards, newCard]);
-  };
+  
+  const handlePlaceBet = () => {
+    dispatch({ type: 'PLACE_BET', payload: totalBet });
+  }
+  const handleStand = () => {
+    dispatch({ type: 'STAND' });
+  }
+  const handleHit = () => {
+    dispatch({ type: 'HIT' });
+  }
   const addCoin = (value: number) => {
     setTotalBet(totalBet + value);
   }
@@ -63,10 +52,11 @@ function BlackJackTable()
       {/* Dealer's section */}
       <div className="dealer">
         <h2>Dealer</h2>
+        <b>Score: {state.dealerScore}</b>
         <div className="cards">
           {/* Render dealer's cards dynamically */}
-          {dealerCards.map((card, index) => (
-            <Card key={index} type={card.type} value={card.value} />
+          {state.dealerCards.map((card, index) => (
+            <CardComp key={index} suit={card.suit} rank={card.rank} />
           ))}
         </div>
 
@@ -75,10 +65,11 @@ function BlackJackTable()
       {/* Player's section */}
       <div className="player">
         <h2>Player</h2>
+        <b>Score: {state.playerScore}</b>
         <div className="cards">
           {/* Render player's cards dynamically */}
-          {playerCards.map((card, index) => (
-            <Card key={index} type={card.type} value={card.value} />
+          {state.playerCards.map((card, index) => (
+            <CardComp key={index} suit={card.suit} rank={card.rank} />
           ))}
         </div>
         <CoinPile totalBet={totalBet} coins={coins} />
@@ -88,26 +79,40 @@ function BlackJackTable()
     </section>
     <section className="bet-container">
     <div className="bet-controller">
+    {!state.isGameStarted ? (
+    <> 
+    <button onClick={handlePlaceBet}>placedBet</button>
     <b>Total Bet: {totalBet}</b>
+    <button onClick={() => setTotalBet(0)}>Clear Bet</button>
+    </>
+    ) : 
+    <> 
+    <button onClick={handleStand}>Stand</button>
+    <b>Placed Bet: {state.placedBet}</b>
+    <button onClick={handleHit}>Hit</button>
+    {state.roundStarted ? <b>Time Left: {state.roundTimer}</b> : null}
+    </>
+    }
     </div>
     <div className='coin-container'>
  {/* Render coins dynamically based on the array */}
- {coins.map((coin ) => (
-            <Coin
-            
-              color={coin.color}
-              value={coin.value}
-              onLeftClick={() => addCoin(coin.value)}
-              onRightClick={() => removeCoin(coin.value)}
-            />
-          ))}
-    
+ {!state.isGameStarted ? (
+    coins.map((coin) => (
+      <Coin
+        key={coin.value} // Always add a unique key when rendering lists
+        color={coin.color}
+        value={coin.value}
+        onLeftClick={() => addCoin(coin.value)}
+        onRightClick={() => removeCoin(coin.value)}
+      />
+    ))
+  ) : null} {/* Render nothing if the game has started */}
     </div>
     <i>Left Click = add, Right Click = remove</i>
     </section>
     <section className="test-controller">
-    <button onClick={dealCardToDealer}>Deal Card to Dealer</button>
-    <button onClick={dealCardToPlayer}>Deal Card to Player</button>
+    <button >Deal Card to Dealer</button>
+    <button >Deal Card to Player</button>
     </section>
     </>
 
