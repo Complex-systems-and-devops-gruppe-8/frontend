@@ -13,7 +13,7 @@ import { BlackJackContext } from '../../state/blackjackState/blackjackContext';
 function BlackJackTable()
 {
     const { state, dispatch } = useContext(BlackJackContext);
-    console.log(state.coins);
+   
     
     
     const [totalBet, setTotalBet] = useState<number>(0);
@@ -23,10 +23,16 @@ function BlackJackTable()
     dispatch({ type: 'PLACE_BET', payload: totalBet });
   }
   const handleStand = () => {
+    if(state.playerBust === false && state.stand === false)
+    {
     dispatch({ type: 'STAND' });
+    }
   }
   const handleHit = () => {
+    if(state.playerBust === false &&   state.stand === false)
+    {
     dispatch({ type: 'HIT' });
+    }
   }
   const addCoin = (value: number) => {
     setTotalBet(totalBet + value);
@@ -51,6 +57,7 @@ function BlackJackTable()
     <section className="blackjack-table">
       {/* Dealer's section */}
       <div className="dealer">
+        {state.dealerBust ? <h1 className='busted-text'>Busted!</h1> : null}
         <h2>Dealer</h2>
         <b>Score: {state.dealerScore}</b>
         <div className="cards">
@@ -64,6 +71,8 @@ function BlackJackTable()
 
       {/* Player's section */}
       <div className="player">
+        {state.playerBust ? <h1 className='busted-text'>Busted!</h1> : null}
+       
         <h2>Player</h2>
         <b>Score: {state.playerScore}</b>
         <div className="cards">

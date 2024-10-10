@@ -117,4 +117,27 @@
      align-items: center;
      height: 50px;
  }
- 
+ .busted-text {
+    position: absolute;
+    font-size: 100px;
+    color: red;
+    animation: popUp 0.5s ease-in-out forwards; /* Apply animation to the text */
+    transform: rotate(-10deg); /* Rotate the text slightly by -10 degrees */
+    z-index: 9999; /* Set a high z-index value to bring it to the front */
+
+}
+
+@keyframes popUp {
+    0% {
+        transform: scale(0) rotate(-30deg);  /* Start small and rotated */
+        opacity: 0;                          /* Fully transparent */
+    }
+    50% {
+        transform: scale(1.2) rotate(-15deg); /* Scale up and rotate slightly less */
+        opacity: 1;                           /* Fully visible */
+    }
+    100% {
+        transform: scale(1) rotate(-10deg);   /* Normal size with a slight rotation */
+        opacity: 1;                           /* Fully visible */
+    }
+}

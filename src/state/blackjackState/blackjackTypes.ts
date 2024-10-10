@@ -3,8 +3,8 @@
 
   
 export type Card = {
-    rank: '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K' | 'A';
-    suit: 'Hearts' | 'Tiles' | 'Pikes' | 'Clovers';
+    rank: '0' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K' | 'A';
+    suit: 'Hearts' | 'Tiles' | 'Pikes' | 'Clovers'| 'Blank';
 };
 type Coins = {
     color: string;
@@ -29,6 +29,12 @@ export type BlackJackState = {
     stand: boolean
     dealerScore: number
     playerScore: number
+    playerBust: boolean
+    dealerBust: boolean
+    hasWon: boolean
+    hasLost: boolean
+    timeBetweenCardsDelt: number
+    timestamp: number
 
 
    
@@ -46,4 +52,9 @@ export type BlackJackState = {
     | { type: 'STAND' }
     | { type: 'UPDATE_PLAYER_SCORE'; payload: number }
     | { type: 'UPDATE_DEALER_SCORE'; payload: number }
+    | { type: 'PLAYER_BUST' }
+    | { type: 'DEALER_BUST' }
+    | { type: 'PLAYER_WINS' }
+    | {type: 'SET_DEALER_CARDS'; payload: Card[]}
+    | {type: 'DECREMENT_TIME_BETWEEN_CARDS'}
  

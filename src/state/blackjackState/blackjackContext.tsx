@@ -28,6 +28,12 @@ import {
     stand: false,
     dealerScore: 0,
     playerScore: 0,
+    playerBust: false,
+    dealerBust: false,
+    hasWon: false,
+    hasLost: false,
+    timeBetweenCardsDelt: 10,
+    timestamp: 0,
   }
   
   interface BlackJackProviderProps {
@@ -63,6 +69,25 @@ import {
           return () => clearInterval(timer); // Cleanup on unmount
         }
       }, [state.roundStarted,state.roundTimer]); 
+      useEffect(() => {
+        
+        if (state.timeBetweenCardsDelt !== 0) {
+       
+          const timer = setInterval(() => {
+            // Only decrement if the timer is greater than 0
+            if (state.roundTimer > 0) {
+                 
+              dispatch({ type: 'DECREMENT_TIME_BETWEEN_CARDS' });
+
+            }
+            else {
+              clearInterval(timer); // Stop the timer when it reaches 0
+            }
+          }, 1000);
+    
+          return () => clearInterval(timer); // Cleanup on unmount
+        }
+      }, [state.timeBetweenCardsDelt]); 
 
     useEffect(() => {
         if (state.round === 1)
@@ -73,12 +98,12 @@ import {
     }, [state.round]);
     useEffect(() => {
         if (state.hit) {
-            hit();
+            hitPlayer();
         }
     }, [state.hit]);
     useEffect(() => {
         if (state.playerCards.length !== 0 ) {
-            console.log("should update player score");
+       
            dispatch({type: 'UPDATE_PLAYER_SCORE', payload: calcScore(state.playerCards) });  
         }
 
@@ -90,6 +115,27 @@ import {
         }
 
     }, [state.dealerCards]);
+    useEffect(() => {
+      if(state.playerScore > 21) {
+     
+        dispatch({type: 'PLAYER_BUST'});
+      }
+    }
+    ,[state.playerScore]);
+    useEffect(() => {
+      if(state.dealerScore > 21) {
+      
+        dispatch({type: 'DEALER_BUST'});
+      }
+    }, [state.dealerScore]);
+    useEffect(() => {
+      console.log(state.timeBetweenCardsDelt)
+      if(state.stand && state.dealerScore < 17 && state.timeBetweenCardsDelt === 0) {
+        console.log('hit dealer')
+        hitDealer();
+        
+      }
+    }, [state.stand,state.playerBust,state.dealerCards,state.timeBetweenCardsDelt]);
 
     const getRandomCard = (): Card  => {
         const ranks: Card ['rank'][] = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
@@ -112,7 +158,7 @@ import {
         dispatch({ type: 'DEAL_CARD_TO_PLAYER', payload: getRandomCard () });
         dispatch({ type: 'DEAL_CARD_TO_PLAYER', payload: getRandomCard () });
         dispatch({ type: 'DEAL_CARD_TO_DEALER', payload: getRandomCard () });
-        dispatch({ type: 'DEAL_CARD_TO_DEALER', payload: getRandomCard () });
+        dispatch({ type: 'DEAL_CARD_TO_DEALER', payload: {suit: 'Blank', rank: '0'} });
     }
     else {
         // Make a request to the server to deal cards
@@ -122,7 +168,7 @@ import {
     dispatch({ type: 'START_ROUND' });
 
     };
-    const hit = () => {
+    const hitPlayer = () => {
         if (state.testMode) {
             const newCard = getRandomCard();
             dispatch({ type: 'DEAL_CARD_TO_PLAYER', payload: newCard });
@@ -132,6 +178,33 @@ import {
             // Make a request to the server to deal cards
         }
     }
+    const flipCard = () => {
+      // Find and remove the blank card
+      const updatedDealerCards = state.dealerCards.filter(card => !(card.suit === 'Blank' && card.rank === '0'));
+  
+      // Dispatch the updated dealer cards (without the blank card)
+      dispatch({
+        type: 'SET_DEALER_CARDS',
+        payload: updatedDealerCards,
+      });
+    };
+    const hitDealer = () => {
+      if (state.testMode) {
+        const newCard = getRandomCard();
+  
+        // Check if there is a blank card in the dealer's hand
+        if (state.dealerCards.some(card => card.suit === 'Blank' && card.rank === '0')) {
+          // Remove blank card and dispatch updated deck
+          flipCard();
+        }
+  
+        // Dispatch the new card to the dealer's deck
+        dispatch({ type: 'DEAL_CARD_TO_DEALER', payload: newCard });
+      } else {
+        // Make a request to the server to deal cards
+      }
+    };
+
     const calcScore = (cards: Card[]): number => {
         let score = 0;
         let aces = 0;
@@ -141,7 +214,9 @@ import {
             aces++;
           } else if (card.rank === 'J' || card.rank === 'Q' || card.rank === 'K') {
             score += 10;
-          } else {
+          
+          } 
+          else {
             score += parseInt(card.rank);
           }
         });

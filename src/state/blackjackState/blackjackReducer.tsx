@@ -48,6 +48,9 @@ export const blackjackReducer = (
         return {
             ...state,
             dealerCards: [...state.dealerCards, action.payload],
+            timeBetweenCardsDelt: 5,
+             
+            
           
         }
     case 'HIT':
@@ -61,6 +64,7 @@ export const blackjackReducer = (
         return {
             ...state,
             stand: true,
+            roundTimer: 0,
         }
     case 'UPDATE_PLAYER_SCORE':
         return {
@@ -71,6 +75,31 @@ export const blackjackReducer = (
         return {
             ...state,
             dealerScore: action.payload,
+        }
+    case 'PLAYER_BUST':
+        return {
+            ...state,
+            playerBust: true,
+        }
+    case 'DEALER_BUST':
+        return {
+            ...state,
+            dealerBust: true,
+        }
+    case 'PLAYER_WINS':
+        return {
+            ...state,
+            hasWon: true,
+        }
+    case 'SET_DEALER_CARDS':
+        return {
+            ...state,
+            dealerCards: action.payload,
+        }
+    case 'DECREMENT_TIME_BETWEEN_CARDS':
+        return {
+            ...state,
+            timeBetweenCardsDelt: state.timeBetweenCardsDelt - 1,
         }
     default:
       return state

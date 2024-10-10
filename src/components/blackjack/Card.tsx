@@ -9,8 +9,11 @@ import {Card} from '../../state/blackjackState/blackjackTypes';
 const CardComp: React.FC<Card> = ({suit,rank}) => {
   // Step 3: Render the card based on the type and value
   return (
+    
     <section className="card"  >
-        <img className='card_img' src={`../../public/resources/black/${suit}_${rank}_black.png`} alt={`${rank} of ${suit}`} />
+       {suit !== 'Blank' && rank !== '0' ?
+        <img className='card_img' src={`../../resources/black/${suit}_${rank}_black.png`} alt={`${rank} of ${suit}`} />
+        :   <img className='card_img' src={`../../resources/black/blank.png`} alt={`Blank`} />}
     </section>
   );
 };
