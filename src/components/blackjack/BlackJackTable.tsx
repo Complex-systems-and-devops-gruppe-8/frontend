@@ -1,11 +1,12 @@
 
 import '../../styling//blackjack/BlackJack.css';
 import CardComp from './Card';
-import { useState, useContext } from 'react';
+import {  useContext } from 'react';
  
 import Coin from './Coin';
 import CoinPile from './CoinPile';
 import { BlackJackContext } from '../../state/blackjackState/blackjackContext';
+import ScoreBox from './ScoreBox';
  
  
 
@@ -16,45 +17,44 @@ function BlackJackTable()
    
     
     
-    const [totalBet, setTotalBet] = useState<number>(0);
+     
     // Function to deal a random card
   
   const handlePlaceBet = () => {
-    dispatch({ type: 'PLACE_BET', payload: totalBet });
+    if(state.notPlacedBet > 0)
+    {
+    dispatch({ type: 'PLACE_BET', payload: state.notPlacedBet });
+    }
   }
   const handleStand = () => {
-    if(state.playerBust === false && state.stand === false)
+    if(state.playerBust === false && state.playerStand === false)
     {
-    dispatch({ type: 'STAND' });
+    dispatch({ type: 'PLAYER_STAND' });
     }
   }
   const handleHit = () => {
-    if(state.playerBust === false &&   state.stand === false)
+    if(state.playerBust === false &&   state.playerStand === false)
     {
     dispatch({ type: 'HIT' });
     }
   }
   const addCoin = (value: number) => {
-    setTotalBet(totalBet + value);
+    dispatch({ type: 'SET_NOT_PLACED_BET', payload: state.notPlacedBet + value });
+ 
   }
     const removeCoin = (value: number) => {
-        if (totalBet - value >= 0) {
-        setTotalBet(totalBet - value);
+        if (state.notPlacedBet - value >= 0) {
+          dispatch({ type: 'SET_NOT_PLACED_BET', payload: state.notPlacedBet - value });
         }
     }
 
-    const coins = [
-        { color: '#eb4034', value: 5 },
-        { color: '#3489eb', value: 10 },
-        { color: '#34eb3d', value: 25 },
-        { color: '#ebd334', value: 50 },
-        { color: '#950cad', value: 100 },
-      ];
+    
 
 
   return (
     <>
     <section className="blackjack-table">
+      <ScoreBox />
       {/* Dealer's section */}
       <div className="dealer">
         {state.dealerBust ? <h1 className='busted-text'>Busted!</h1> : null}
@@ -81,7 +81,7 @@ function BlackJackTable()
             <CardComp key={index} suit={card.suit} rank={card.rank} />
           ))}
         </div>
-        <CoinPile totalBet={totalBet} coins={coins} />
+        <CoinPile totalBet={state.notPlacedBet} coins={state.coins} />
       
       </div>
       
@@ -91,22 +91,26 @@ function BlackJackTable()
     {!state.isGameStarted ? (
     <> 
     <button onClick={handlePlaceBet}>placedBet</button>
-    <b>Total Bet: {totalBet}</b>
-    <button onClick={() => setTotalBet(0)}>Clear Bet</button>
+    <b className='bet-number'>Total Bet: {state.notPlacedBet}</b>
+    <button onClick={() => removeCoin(state.notPlacedBet)}>Clear Bet</button>
     </>
     ) : 
-    <> 
+    <div className='bet-info'> 
+    <div className='bet-buttons'>
     <button onClick={handleStand}>Stand</button>
-    <b>Placed Bet: {state.placedBet}</b>
+    <b className='bet-number'>Placed Bet: {state.placedBet}</b>
     <button onClick={handleHit}>Hit</button>
-    {state.roundStarted ? <b>Time Left: {state.roundTimer}</b> : null}
-    </>
+    </div>
+    
+    {state.roundStarted ? <div><b>Time Left: {state.roundTimer}</b></div> : null}
+     
+    </div>
     }
     </div>
     <div className='coin-container'>
  {/* Render coins dynamically based on the array */}
  {!state.isGameStarted ? (
-    coins.map((coin) => (
+    state.coins.map((coin) => (
       <Coin
         key={coin.value} // Always add a unique key when rendering lists
         color={coin.color}
@@ -117,12 +121,12 @@ function BlackJackTable()
     ))
   ) : null} {/* Render nothing if the game has started */}
     </div>
+     {!state.isGameStarted ? (
     <i>Left Click = add, Right Click = remove</i>
+     ) : null}
+ 
     </section>
-    <section className="test-controller">
-    <button >Deal Card to Dealer</button>
-    <button >Deal Card to Player</button>
-    </section>
+    
     </>
 
 

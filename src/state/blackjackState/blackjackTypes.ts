@@ -17,6 +17,7 @@ export type BlackJackState = {
     dealerCards: Card[]
     playerCards: Card[]
     placedBet: number
+    notPlacedBet: number
     coins: Coins[]
     message: string
     isGameStarted: boolean
@@ -26,13 +27,15 @@ export type BlackJackState = {
     round: number
     roundStarted: boolean
     hit: boolean
-    stand: boolean
+    playerStand: boolean
+    dealerStand: boolean
     dealerScore: number
     playerScore: number
     playerBust: boolean
     dealerBust: boolean
     hasWon: boolean
     hasLost: boolean
+    isDraw: boolean
     timeBetweenCardsDelt: number
     timestamp: number
 
@@ -49,12 +52,18 @@ export type BlackJackState = {
   | { type: 'DEAL_CARD_TO_DEALER'; payload: Card  }
   | { type: 'START_ROUND' }
     | { type: 'HIT' }
-    | { type: 'STAND' }
+    | { type: 'PLAYER_STAND' }
+    | { type: 'DEALER_STAND' }
     | { type: 'UPDATE_PLAYER_SCORE'; payload: number }
     | { type: 'UPDATE_DEALER_SCORE'; payload: number }
     | { type: 'PLAYER_BUST' }
     | { type: 'DEALER_BUST' }
     | { type: 'PLAYER_WINS' }
+    | { type: 'DEALER_WINS' }
+    | { type: 'DRAW' }
     | {type: 'SET_DEALER_CARDS'; payload: Card[]}
     | {type: 'DECREMENT_TIME_BETWEEN_CARDS'}
+    | { type: 'RESET_TIME_BETWEEN_CARDS'}
+    | { type: 'RESET_GAME'; }
+    | { type: 'SET_NOT_PLACED_BET'; payload: number }
  

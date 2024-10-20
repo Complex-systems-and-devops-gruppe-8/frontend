@@ -6,8 +6,8 @@
     justify-content: center;
     height: 100%;
     width: 100%;
-    background-color: rgb(55, 79, 79);
-    border-radius: 5px;
+    background-color: #183e29;
+    border-radius: 30px;
 }  
 .coin-btn
 {
@@ -33,10 +33,26 @@
 .bet-controller {
     display: flex;
     flex-direction: row;
-    justify-content: space-between; /* Distribute space between items */
+    width: 100%;
+    justify-content: space-evenly;
     align-items: center; /* Align items vertically in the center */
     margin-top: 20px;
-    width: 50%;
+   
+}
+.bet-controller button {
+    padding: 10px 20px; /* Padding inside the button */
+    background-color:  #005f00; /* Green background */
+    border-color: #a3a010;
+    border-width: 4px;
+  
+    border-radius: 30px; /* Rounded corners */
+    width: 140px; /* Button width */
+    height: 65px;
+    cursor: pointer; /* Cursor on hover */
+    font-size: 1.2em; /* Font size */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    margin-left: 10px;
+    margin-right: 10px;
 }
 .coin-container
 {
@@ -123,7 +139,7 @@
     color: red;
     animation: popUp 0.5s ease-in-out forwards; /* Apply animation to the text */
     transform: rotate(-10deg); /* Rotate the text slightly by -10 degrees */
-    z-index: 9999; /* Set a high z-index value to bring it to the front */
+    z-index: 2; /* Set a high z-index value to bring it to the front */
 
 }
 
@@ -140,4 +156,31 @@
         transform: scale(1) rotate(-10deg);   /* Normal size with a slight rotation */
         opacity: 1;                           /* Fully visible */
     }
+}
+
+.bet-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+ 
+  
+ 
+}
+.bet-buttons {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+  
+}
+
+.bet-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+   
 }

@@ -16,23 +16,31 @@ import {
     dealerCards: [],
     playerCards: [],
     placedBet: 0,
-    coins: [],
+    coins:   [
+      { color: '#eb4034', value: 5 },
+      { color: '#3489eb', value: 10 },
+      { color: '#34eb3d', value: 25 },
+      { color: '#ebd334', value: 50 },
+      { color: '#950cad', value: 100 },
+    ],
     message: '',
     isGameStarted: false,
     roundTimer: 30,
     testMode: true,
-    
+    notPlacedBet: 0,
     round: 0,
     roundStarted: false,
     hit: false,
-    stand: false,
+    playerStand: false,
+    dealerStand: false,
     dealerScore: 0,
     playerScore: 0,
     playerBust: false,
     dealerBust: false,
     hasWon: false,
     hasLost: false,
-    timeBetweenCardsDelt: 10,
+    isDraw: false,
+    timeBetweenCardsDelt: 3,
     timestamp: 0,
   }
   
@@ -70,24 +78,14 @@ import {
         }
       }, [state.roundStarted,state.roundTimer]); 
       useEffect(() => {
-        
-        if (state.timeBetweenCardsDelt !== 0) {
-       
+        if (state.timeBetweenCardsDelt > 0) {
           const timer = setInterval(() => {
-            // Only decrement if the timer is greater than 0
-            if (state.roundTimer > 0) {
-                 
-              dispatch({ type: 'DECREMENT_TIME_BETWEEN_CARDS' });
-
-            }
-            else {
-              clearInterval(timer); // Stop the timer when it reaches 0
-            }
+            dispatch({ type: 'DECREMENT_TIME_BETWEEN_CARDS' });
           }, 1000);
-    
-          return () => clearInterval(timer); // Cleanup on unmount
+      
+          return () => clearInterval(timer); // Cleanup to avoid multiple intervals
         }
-      }, [state.timeBetweenCardsDelt]); 
+      }, [state.timeBetweenCardsDelt]);
 
     useEffect(() => {
         if (state.round === 1)
@@ -119,6 +117,7 @@ import {
       if(state.playerScore > 21) {
      
         dispatch({type: 'PLAYER_BUST'});
+        
       }
     }
     ,[state.playerScore]);
@@ -127,15 +126,32 @@ import {
       
         dispatch({type: 'DEALER_BUST'});
       }
+      else if(state.dealerScore >= 17) {
+        dispatch({type: 'DEALER_STAND'});
+      }
     }, [state.dealerScore]);
     useEffect(() => {
       console.log(state.timeBetweenCardsDelt)
-      if(state.stand && state.dealerScore < 17 && state.timeBetweenCardsDelt === 0) {
+      if(state.playerStand && state.dealerScore < 17 && state.timeBetweenCardsDelt === 0) {
         console.log('hit dealer')
         hitDealer();
-        
+      
+        dispatch({ type: 'RESET_TIME_BETWEEN_CARDS'});
       }
-    }, [state.stand,state.playerBust,state.dealerCards,state.timeBetweenCardsDelt]);
+    }, [state.playerStand,state.playerBust,state.dealerCards,state.timeBetweenCardsDelt]);
+    useEffect(() => {
+      if(state.playerStand && state.dealerStand){
+        if(state.dealerBust == true && state.playerBust ==false || state.playerScore > state.dealerScore && state.playerBust == false && state.dealerBust == false) {
+        dispatch({type: 'PLAYER_WINS'});
+        }
+        else if(state.playerBust == true || state.playerScore < state.dealerScore && state.dealerBust == false) {
+          dispatch({type: 'DEALER_WINS'});
+        }
+        else if(state.playerScore == state.dealerScore && state.dealerBust == false && state.playerBust == false) {
+          dispatch({type: 'DRAW'});
+        }
+      }
+    }, [state.playerStand,state.dealerStand]);
 
     const getRandomCard = (): Card  => {
         const ranks: Card ['rank'][] = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
