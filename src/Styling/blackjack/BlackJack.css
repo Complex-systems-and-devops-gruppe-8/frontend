@@ -1,0 +1,186 @@
+.bet-container
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: #183e29;
+    border-radius: 30px;
+}  
+.coin-btn
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+    background-color: transparent;
+    border-radius: 50%;
+    border: none; /* Remove default button border */
+    transition: background 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+} 
+.coin-btn :hover
+{
+    cursor: pointer;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); /* Glowing light effect */
+    outline: none;
+    border-color: transparent;
+}
+.bet-controller {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center; /* Align items vertically in the center */
+    margin-top: 20px;
+   
+}
+.bet-controller button {
+    padding: 10px 20px; /* Padding inside the button */
+    background-color:  #005f00; /* Green background */
+    border-color: #a3a010;
+    border-width: 4px;
+  
+    border-radius: 30px; /* Rounded corners */
+    width: 140px; /* Button width */
+    height: 65px;
+    cursor: pointer; /* Cursor on hover */
+    font-size: 1.2em; /* Font size */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.coin-container
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+ 
+} 
+.blackjack-table {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100vh; /* Width of the half-circle */
+    height: 600px; /* Half of the width to create a half-circle */
+    border-bottom-left-radius: 40vh; /* Radius should be half of the width */
+    border-bottom-right-radius: 40vh; /* Radius should be half of the width */
+    overflow: hidden; /* Hide any overflow to maintain shape */
+    
+    /* Border styles */
+    border-style: solid;
+    border-width: 8px;
+    border-color: #5e3a08; /* A more muted color for the border */
+
+    /* Background with texture */
+    background-image: linear-gradient(135deg, #67ac33 25%, #59e32e 25%, #3f6b32 50%, #497726 50%, #5d8a3b 75%, #3f6b32 75%, #3f6b32 100%);
+    background-size: 20px 20px; /* Tile size */
+    
+    
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); 
+    position: relative;  
+    margin-top: 71px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+
+     
+    background-color: #005f00;  
+    background-blend-mode: multiply;  
+    color: #a3a010;
+}
+
+ 
+.blackjack-table:before {
+    content: '';
+    position: absolute;
+    top: 20px;  
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;  
+    color: #ffffff;  
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); 
+    font-family: 'Arial', sans-serif;  
+}
+ 
+ .dealer,
+ .player{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+ 
+ .cards
+ {
+     display: flex;
+     flex-direction: row;
+     justify-content: center;
+     align-items: center;
+ }
+ .divider
+ {
+     display: flex;
+     flex-direction: row;
+     justify-content: center;
+     align-items: center;
+     height: 50px;
+ }
+ .busted-text {
+    position: absolute;
+    font-size: 100px;
+    color: red;
+    animation: popUp 0.5s ease-in-out forwards; /* Apply animation to the text */
+    transform: rotate(-10deg); /* Rotate the text slightly by -10 degrees */
+    z-index: 2; /* Set a high z-index value to bring it to the front */
+
+}
+
+@keyframes popUp {
+    0% {
+        transform: scale(0) rotate(-30deg);  /* Start small and rotated */
+        opacity: 0;                          /* Fully transparent */
+    }
+    50% {
+        transform: scale(1.2) rotate(-15deg); /* Scale up and rotate slightly less */
+        opacity: 1;                           /* Fully visible */
+    }
+    100% {
+        transform: scale(1) rotate(-10deg);   /* Normal size with a slight rotation */
+        opacity: 1;                           /* Fully visible */
+    }
+}
+
+.bet-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+ 
+  
+ 
+}
+.bet-buttons {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+  
+}
+
+.bet-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+   
+}
