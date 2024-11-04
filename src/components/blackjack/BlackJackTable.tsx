@@ -1,5 +1,5 @@
 
-import '../../styling/blackjack/BlackJack.css';
+import '../../styling/blackjack/BlackJackTable.css';
 import CardComp from './Card';
 import {  useContext } from 'react';
  
@@ -15,9 +15,7 @@ function BlackJackTable()
 {
     const { state, dispatch } = useContext(BlackJackContext);
    
-    
-    
-     
+
     // Function to deal a random card
   
   const handlePlaceBet = () => {
