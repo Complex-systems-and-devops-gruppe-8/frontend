@@ -1,0 +1,78 @@
+/* Main container for the register page */
+.register-container {
+    width: 400px; /* Increased width for better layout */
+    margin: 50px auto; /* Centered with top margin for spacing */
+    padding: 30px; /* Increased padding for better spacing */
+    border-radius: 8px; /* More rounded corners */
+    background-color: #51515188; /* White background for contrast */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  /* Heading style */
+  .register-heading {
+    font-size: 2rem; /* Larger font size */
+    text-align: center; /* Centered heading */
+    margin-bottom: 20px; /* Space below the heading */
+    color: #cecece; /* Match header purple color */
+  }
+  
+  /* Go Back link styling */
+  .go-back-text {
+    color: #6d28d9; /* Link color matching header */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-align: center; /* Center the text */
+    margin: 20px 0; /* Margin for spacing */
+    text-decoration: underline; /* Underline to look like a link */
+    font-size: 0.9rem; /* Smaller font size */
+  }
+  
+  .go-back-text:hover {
+    color: #5b21b6; /* Darker purple on hover */
+  }
+  
+  /* Form layout */
+  .register-form {
+    display: flex;
+    flex-direction: column; /* Stack inputs vertically */
+  }
+  
+  /* Input field styling */
+  .register-input {
+    margin-bottom: 15px; /* Space between inputs */
+    padding: 12px; /* Increased padding for a better feel */
+    font-size: 16px; /* Font size */
+    border-radius: 4px; /* Rounded corners */
+    border: 1px solid #d1d5db; /* Light border */
+    transition: border-color 0.3s; /* Transition effect for focus */
+  }
+  
+  /* Input focus effect */
+  .register-input:focus {
+    border-color: #6d28d9; /* Change border color to match header on focus */
+    outline: none; /* Remove default outline */
+  }
+  
+  /* Register button styling */
+  .register-button {
+    padding: 12px; /* Increased padding */
+    font-size: 16px; /* Font size */
+    background-color: #6d28d9; /* Purple background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    transition: background-color 0.3s; /* Transition effect */
+  }
+  
+  /* Button hover effect */
+  .register-button:hover {
+    background-color: #5b21b6; /* Darker purple on hover */
+  }
+  
+  /* Error message styling */
+  .error-message {
+    color: red; /* Red color for error messages */
+    text-align: center; /* Centered error message */
+    margin-bottom: 15px; /* Space below error message */
+  }
+  

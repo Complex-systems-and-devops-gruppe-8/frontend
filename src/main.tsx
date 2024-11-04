@@ -5,6 +5,7 @@ import LandingPage from './Landingpage';
 import PokerPage from './Pages/Poker';
 import CoinFlipPage from './Pages/CoinFlip';
 import BlackjackPage from './Pages/Blackjack';
+import RegisterPage from './Pages/RegisterPage';
 import { BrowserRouter as Router, Route,Routes } from 'react-router-dom'
 import { UserProvider } from './state/userState/userContext'; 
 
@@ -19,8 +20,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Route path="/coinflip" element={<CoinFlipPage />} />
             <Route path="/poker" element={<PokerPage />} />
             <Route path="/blackjack" element={<BlackjackPage />} />
-           
+            <Route path="/register" element={<RegisterPage />} />
           </Routes>
+
         </UserProvider>
     </Router>
   </React.StrictMode>

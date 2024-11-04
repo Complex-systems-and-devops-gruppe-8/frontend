@@ -1,20 +1,21 @@
-import React, {useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../state/userState/userContext';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../Styling/Header.css';
- 
-
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const { state } =  useContext(UserContext);
+  const { state } = useContext(UserContext);
+  const navigate = useNavigate(); // Initialize useNavigate
 
-
-   const handleLogin = () => {
+  const handleLogin = () => {
     console.log('login pressed');
   };
+
   const handleRegister = () => {
-    console.log('register pressed');
+    navigate('/register'); // Navigate to the register page
   };
+
   const handleLogout = () => {
     console.log('logout pressed');
   };
@@ -23,7 +24,7 @@ const Header: React.FC = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-   
+
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -37,23 +38,19 @@ const Header: React.FC = () => {
       <nav className="header-nav">
         <ul>
           <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
-       {/*Shows logout is auth is true and login and signup if auth is false ;) */}
+      {/* Shows logout if authenticated and login and signup if not authenticated */}
       <div className='auth-buttons'>
-      {state.isAuthenticated ? (
+        {state.isAuthenticated ? (
           <button className='logoutBtn' onClick={handleLogout}>Logout</button>
         ) : (
           <div className='auth-buttons'>
             <button className='loginBtn' onClick={handleLogin}>Login</button>
             <button className='registerBtn' onClick={handleRegister}>Register</button>
-            </div>
+          </div>
         )}
-        </div> 
-      
+      </div> 
     </header>
   );
 };
