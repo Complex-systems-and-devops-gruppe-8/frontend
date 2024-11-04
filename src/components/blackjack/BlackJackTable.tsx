@@ -1,5 +1,5 @@
 
-import '../../styling/blackjack/BlackJack.css';
+import '../../Styling/blackjack/BlackJack.css';
 import CardComp from './Card';
 import {  useContext } from 'react';
  
