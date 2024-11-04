@@ -1,0 +1,55 @@
+.scorebox {
+    position: fixed;
+    top: -100px; /* Start off-screen at the top */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 25px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 1.2em;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, top 0.5s ease, visibility 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 3;
+  }
+  
+  .scorebox.show {
+    opacity: 1;
+    visibility: visible;
+    top: 50%; /* Move to the center vertically */
+    transform: translate(-50%, -50%); /* Center the box horizontally and vertically */
+  }
+  
+  .scorebox-win {
+    background-color: #28a745;
+  }
+  
+  .scorebox-lose {
+    background-color: #dc3545;
+  }
+  
+  .scorebox-draw {
+    background-color: #ffc107;
+  }
+  
+  .scorebox-button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #fff;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }
+  
+  .scorebox-button:hover {
+    background-color: #f0f0f0;
+  }
+  
