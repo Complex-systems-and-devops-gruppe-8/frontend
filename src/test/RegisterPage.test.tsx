@@ -21,7 +21,8 @@ describe('RegisterPage Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Repeat Password'), { target: { value: 'differentpassword' } });
 
     // Submit the form
-    fireEvent.click(screen.getByText('Register'));
+    fireEvent.click(screen.getByRole('button', { name: /register/i }));
+
 
     // Check for the error message
     expect(screen.queryByText('Passwords do not match.')).not.toBeNull();
@@ -42,7 +43,8 @@ describe('RegisterPage Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Repeat Password'), { target: { value: 'password123' } });
 
     // Submit the form
-    fireEvent.click(screen.getByText('Register'));
+    fireEvent.click(screen.getByRole('button', { name: /register/i }));
+
 
     // Check for the error message
     expect(screen.queryByText('Emails do not match.')).not.toBeNull();
@@ -56,7 +58,7 @@ describe('RegisterPage Component', () => {
     );
 
     // Submit the form without filling in any fields
-    fireEvent.click(screen.getByText('Register'));
+    fireEvent.click(screen.getByRole('button', { name: /register/i }));
 
     // Check for the error message
     expect(screen.queryByText('All fields are required.')).not.toBeNull();
@@ -77,7 +79,8 @@ describe('RegisterPage Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Repeat Password'), { target: { value: 'password123' } });
 
     // Submit the form
-    fireEvent.click(screen.getByText('Register'));
+    fireEvent.click(screen.getByRole('button', { name: /register/i }));
+
 
     // Check that no error message is displayed
     expect(screen.queryByText('All fields are required.')).toBeNull();
