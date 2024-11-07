@@ -1,28 +1,28 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, Dispatch,useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sirenClient } from '../api/sirenClient';
+import { sirenClient } from '../../api/sirenClient';
 import { Action } from '@siren-js/client';
+import { AuthState, AuthAction  } from './authTypes'
+import { authReducer  } from './userReducer'
+  
+const initialState: AuthState = {
+  authTokens: null,
+  isAuthenticated: false,
+  login: async () => { },
+  logout: () => { },
+};
 
-interface AuthContextType {
-  accessToken: string | null;
-  refreshToken: string | null;
-  isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<void>;
-  logout: () => void;
-}
-
-interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-}
-
-interface RefreshedAccessToken {
-  accessToken: string;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<
+{
+  state: AuthState
+  dispatch: Dispatch<AuthAction>,
+}>({
+  state: initialState,
+  dispatch: () => null, // Placeholder function
+})
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [state, dispatch] = useReducer(authReducer, initialState);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [rootEntity, setRootEntity] = useState<any>(null);

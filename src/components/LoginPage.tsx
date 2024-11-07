@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../state/authState/authContext';
 import { sirenClient } from '../api/sirenClient';
 
 export function LoginPage() {

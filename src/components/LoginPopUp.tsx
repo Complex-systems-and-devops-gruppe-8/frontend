@@ -1,5 +1,6 @@
  
 import "../Styling/LoginPopUp.css"
+
 interface LoginPopUpProps {
     handleLogin: () => void;
     handleClose: () => void;
@@ -9,6 +10,7 @@ function LoginPopUp({ handleLogin, handleClose }: LoginPopUpProps) {
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+       
         handleLogin( ); // Calls handleLogin with username and password
       };
     return (
