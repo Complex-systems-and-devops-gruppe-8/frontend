@@ -1,9 +1,10 @@
+/*
 import React, { useState } from 'react';
-import { useAuth } from '../state/authState/authContext';
+ 
 import { sirenClient } from '../api/sirenClient';
 
 export function LoginPage() {
-  const { login, isAuthenticated } = useAuth();
+ 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState<string | null>(null);
@@ -77,3 +78,4 @@ export function LoginPage() {
 interface HelloAdminResponse {
     message: string
 }
+*/

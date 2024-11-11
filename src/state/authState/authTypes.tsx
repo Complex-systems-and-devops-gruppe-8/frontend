@@ -1,19 +1,35 @@
 export type AuthState = {
-    authTokens : AuthTokens | null;
+    authTokens: AuthTokens;
     isAuthenticated: boolean;
-    login: (username: string, password: string) => Promise<void>;
-    logout: () => void;
+    rootEntity: any;
+    authEntity: any;
+    loginState: LoginState;
   }
 
 export type AuthAction = 
   | {  type: 'LOGIN_SUCCESS',   payload: AuthTokens  } 
+  | {  type: 'LOGIN_START', payload: { email: string, password: string }  }
+  | {  type: 'LOGIN_FAILURE',  payload: string  }
   | {  type: 'LOGOUT' }
+  | {  type: 'ROOT_ENTITY',  payload: any }
+  | {  type: 'AUTH_ENTITY',  payload: any }
+  | { type: 'SET_ACCESS_TOKEN', payload: string | null }
+  | { type: 'SET_REFRESH_TOKEN', payload: string | null }
 
-  interface AuthTokens {
-    accessToken: string;
-    refreshToken: string;
+
+
+export type LoginState = {
+    startLogIn: boolean;
+    error: string | null;
+    loggedIn: boolean;
+    inputEmail: string;
+    inputPassword: string;
+  }
+ export interface AuthTokens {
+    accessToken: string | null;
+    refreshToken: string | null;
   }
   
-  interface RefreshedAccessToken {
+ export interface RefreshedAccessToken {
     accessToken: string;
   }

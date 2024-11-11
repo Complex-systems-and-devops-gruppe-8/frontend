@@ -1,15 +1,27 @@
-import React, { createContext, useContext, useEffect, Dispatch,useReducer, useRef, useState } from 'react';
+import React, { createContext,  useEffect, Dispatch,useReducer, useRef    } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sirenClient } from '../../api/sirenClient';
 import { Action } from '@siren-js/client';
 import { AuthState, AuthAction  } from './authTypes'
 import { authReducer  } from './userReducer'
-  
+import { AuthTokens } from './authTypes';
+ import { RefreshedAccessToken } from './authTypes'; 
+
+
+
 const initialState: AuthState = {
-  authTokens: null,
+  authTokens: { accessToken: null, refreshToken: null },
   isAuthenticated: false,
-  login: async () => { },
-  logout: () => { },
+  rootEntity: null,
+  authEntity: null,
+  loginState: {
+    startLogIn: false,
+    error: null,
+    loggedIn: false,
+    inputEmail: '',
+    inputPassword: ''
+  }
+
 };
 
 const AuthContext = createContext<
@@ -23,10 +35,10 @@ const AuthContext = createContext<
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [refreshToken, setRefreshToken] = useState<string | null>(null);
-  const [rootEntity, setRootEntity] = useState<any>(null);
-  const [authEntity, setAuthEntity] = useState<any>(null);
+ // const [accessToken, setAccessToken] = useState<string | null>(null);
+ // const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  //const [rootEntity, setRootEntity] = useState<any>(null);
+  //const [authEntity, setAuthEntity] = useState<any>(null);
   const navigate = useNavigate();
 
   /**
@@ -37,12 +49,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const init = async () => {
       try {
         const root = await sirenClient.followAndParse('/');
-        setRootEntity(root);
+        dispatch({ type: 'ROOT_ENTITY', payload: root })
 
         const authLink = root.links.find((link: any) => link.rel.includes('auth'));
         if (authLink) {
           const auth = await sirenClient.followAndParse(authLink.href);
-          setAuthEntity(auth);
+          dispatch({ type: 'AUTH_ENTITY', payload: auth })
         }
       } catch (error) {
         console.error('Failed to initialize:', error);
@@ -61,9 +73,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    * Ensures the latest token values are available for the refresh mechanism.
    */
   useEffect(() => {
-    tokenRef.current = { accessToken, refreshToken };
-    sirenClient.setAccessToken(accessToken);
-  }, [accessToken, refreshToken]);
+    tokenRef.current = {
+      accessToken: state.authTokens.accessToken,
+      refreshToken: state.authTokens.refreshToken
+    };
+    sirenClient.setAccessToken(state.authTokens?.accessToken || null);
+  }, [state.authTokens]);
+
+
+  /**
+   * Cheks if the user is trying to login
+   */
+  useEffect(() => {
+    if (state.loginState.startLogIn) {
+      login();
+    }
+  }, [state.loginState.startLogIn, navigate]);
+
 
   /**
    * Automatic token refresh mechanism.
@@ -79,13 +105,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       console.log('Attempting token refresh...');
 
-      if (!authEntity || !accessToken || !refreshToken) {
+      if (!state.authEntity || !state.authTokens.accessToken || !state.authTokens.refreshToken) {
         console.log('Missing required data for refresh');
         return;
       }
 
       try {
-        const refreshAction = authEntity.actions.find(
+        const refreshAction = state.authEntity.actions.find(
           (action: Action) => action.name === 'refresh-access-token'
         );
 
@@ -102,7 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('Token refresh successful');
 
         const tokens = response.properties;
-        setAccessToken(tokens.accessToken);
+        dispatch({ type: 'SET_ACCESS_TOKEN', payload: tokens.accessToken });
       } catch (error) {
         console.error('Token refresh failed:', error);
         logout();
@@ -110,7 +136,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    if (authEntity) {
+    if (state.authEntity) {
       refreshTimer = window.setInterval(refreshAccessToken, 270000);
     }
 
@@ -119,49 +145,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         window.clearInterval(refreshTimer);
       }
     };
-  }, [authEntity, navigate]);
+  }, [state.authEntity, navigate]);
 
 
-  const login = async (username: string, password: string) => {
-    if (!authEntity) throw new Error('Auth entity not initialized');
-
-    const loginAction = authEntity.actions.find(
+  const login = async () => {
+    if (!state.authEntity) throw new Error('Auth entity not initialized');
+  
+    const loginAction = state.authEntity.actions.find(
       (action: Action) => action.name === 'create-token'
     );
-
+  
     if (!loginAction) throw new Error('Login action not found');
-
+  
+    const { inputEmail: username, inputPassword: password } = state.loginState;
+  
     try {
       const response = await sirenClient.submitAndParse<AuthTokens>(loginAction, {
         username,
         password
       });
-
+  
       const tokens = response.properties;
-      setAccessToken(tokens.accessToken);
-      setRefreshToken(tokens.refreshToken);
+      dispatch({ type: 'LOGIN_SUCCESS', payload: tokens });
+    
+     
     } catch (error) {
       if (error instanceof Error && error.message === 'Unauthorized') {
-        navigate('/login');
+         dispatch({ type: 'LOGIN_FAILURE', payload: 'Invalid credentials' });
       }
       throw error;
     }
   };
-
   const logout = () => {
-    setAccessToken(null);
-    setRefreshToken(null);
+    dispatch({ type: 'LOGOUT' });
     sirenClient.setAccessToken(null);
   };
 
   return (
     <AuthContext.Provider
       value={{
-        accessToken,
-        refreshToken,
-        isAuthenticated: !!accessToken,
-        login,
-        logout,
+        state, dispatch
+        
       }}
     >
       {children}
@@ -183,10 +207,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
      await login('username', 'password');
    };
  */
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+ 
