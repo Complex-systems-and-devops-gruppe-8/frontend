@@ -112,6 +112,9 @@ export class AuthenticatedClient {
       if (response.status === 401) {
         throw new Error('Unauthorized');
       }
+      if(response.status === 400) {
+        throw new Error('Bad Request');
+      }
 
       return await parse<T>(response);
     } catch (error) {

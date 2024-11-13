@@ -11,20 +11,20 @@ import { AuthTokens } from './authTypes';
 
 const initialState: AuthState = {
   authTokens: { accessToken: null, refreshToken: null },
-  isAuthenticated: false,
+  
   rootEntity: null,
   authEntity: null,
   loginState: {
     startLogIn: false,
     error: null,
     loggedIn: false,
-    inputEmail: '',
+    inputUsername: '',
     inputPassword: ''
   }
 
 };
 
-const AuthContext = createContext<
+export const AuthContext = createContext<
 {
   state: AuthState
   dispatch: Dispatch<AuthAction>,
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (state.loginState.startLogIn) {
       login();
     }
-  }, [state.loginState.startLogIn, navigate]);
+  }, [state.loginState.startLogIn]);
 
 
   /**
@@ -149,31 +149,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
   const login = async () => {
-    if (!state.authEntity) throw new Error('Auth entity not initialized');
+    // Ensure authEntity is available
+  if (!state.authEntity) {
+    dispatch({ type: 'LOGIN_FAILURE', payload: 'Auth entity not initialized' });
+    console.error('Auth entity not initialized');
+    return;
+  }
   
     const loginAction = state.authEntity.actions.find(
       (action: Action) => action.name === 'create-token'
     );
   
-    if (!loginAction) throw new Error('Login action not found');
+    if (!loginAction) {
+      dispatch({ type: 'LOGIN_FAILURE', payload: 'Login action not found' });
+      console.error('Login action not found');
+      return;
+    }
   
-    const { inputEmail: username, inputPassword: password } = state.loginState;
-  
+    const { inputUsername: username, inputPassword: password } = state.loginState;
+    console.log(username, password);
     try {
       const response = await sirenClient.submitAndParse<AuthTokens>(loginAction, {
         username,
         password
       });
-  
-      const tokens = response.properties;
-      dispatch({ type: 'LOGIN_SUCCESS', payload: tokens });
+    console.log(response);
+      // If successful, retrieve and dispatch tokens
+    const tokens = response.properties;
+    dispatch({ type: 'LOGIN_SUCCESS', payload: tokens });
+    console.log('Login successful');
     
      
-    } catch (error) {
-      if (error instanceof Error && error.message === 'Unauthorized') {
-         dispatch({ type: 'LOGIN_FAILURE', payload: 'Invalid credentials' });
+  } catch (error) {
+    // More granular error handling for different types of errors
+    if (error instanceof Error) {
+      if (error.message.includes('Unauthorized')) {
+        dispatch({ type: 'LOGIN_FAILURE', payload: 'Invalid credentials' });
+        console.error('Invalid credentials');
+      } else {
+        dispatch({ type: 'LOGIN_FAILURE', payload: 'Login failed. Please try again.' });
+        console.error('Login failed with error:', error.message);
       }
-      throw error;
+    } else {
+      // Fallback for any unknown errors
+      dispatch({ type: 'LOGIN_FAILURE', payload: 'An unexpected error occurred' });
+      console.error('Unexpected error during login:', error);
+    }
     }
   };
   const logout = () => {

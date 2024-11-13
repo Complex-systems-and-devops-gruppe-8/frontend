@@ -14,7 +14,7 @@ export const authReducer = (
             startLogIn: false,
             error: null,
             loggedIn: true,
-            inputEmail: '',
+            inputUsername: '',
             inputPassword: ''
         },
         authTokens: {
@@ -31,7 +31,7 @@ export const authReducer = (
                 startLogIn: true,
                 error: null,
                 loggedIn: false,
-                inputEmail: action.payload.email,
+                inputUsername: action.payload.username,
                 inputPassword: action.payload.password
             }
         }
@@ -43,7 +43,13 @@ export const authReducer = (
             accessToken: null,
             refreshToken: null
         },
-            isAuthenticated: false
+            loginState: {
+                startLogIn: false,
+                error: null,
+                loggedIn: false,
+                inputUsername: '',
+                inputPassword: ''
+            }
         }
     case 'ROOT_ENTITY':
         return {
@@ -75,8 +81,11 @@ export const authReducer = (
         return {
             ...state,
             loginState: {
-                ...state.loginState,
-                error: action.payload
+                startLogIn: false,
+                error: action.payload,
+                loggedIn: false,
+                inputUsername: state.loginState.inputUsername,
+                inputPassword: state.loginState.inputPassword
             }
         }
     default:   

@@ -1,6 +1,6 @@
 export type AuthState = {
     authTokens: AuthTokens;
-    isAuthenticated: boolean;
+   
     rootEntity: any;
     authEntity: any;
     loginState: LoginState;
@@ -8,7 +8,7 @@ export type AuthState = {
 
 export type AuthAction = 
   | {  type: 'LOGIN_SUCCESS',   payload: AuthTokens  } 
-  | {  type: 'LOGIN_START', payload: { email: string, password: string }  }
+  | {  type: 'LOGIN_START', payload: { username: string, password: string }  }
   | {  type: 'LOGIN_FAILURE',  payload: string  }
   | {  type: 'LOGOUT' }
   | {  type: 'ROOT_ENTITY',  payload: any }
@@ -22,7 +22,7 @@ export type LoginState = {
     startLogIn: boolean;
     error: string | null;
     loggedIn: boolean;
-    inputEmail: string;
+    inputUsername: string;
     inputPassword: string;
   }
  export interface AuthTokens {

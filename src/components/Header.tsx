@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState } from 'react';
-import { UserContext } from '../state/userState/userContext';
+import { AuthContext} from '../state/authState/authContext';
 import LoginPopUp from './LoginPopUp';
 import '../Styling/Header.css';
 
@@ -8,7 +8,7 @@ import '../Styling/Header.css';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const { state } =  useContext(UserContext);
+  const { state,dispatch } =  useContext(AuthContext);
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
 
    const handleLogin = () => {
@@ -23,6 +23,7 @@ const Header: React.FC = () => {
     console.log('register pressed');
   };
   const handleLogout = () => {
+    dispatch({ type: 'LOGOUT' });
     console.log('logout pressed');
   };
 
@@ -40,7 +41,7 @@ const Header: React.FC = () => {
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="logo">🤑LOGO🤑</div>
-      {loginOpen ? (  <LoginPopUp handleLogin={handleLogin} handleClose={handleClose} />) : null}
+      {loginOpen ? (  <LoginPopUp handleClose={handleClose} />) : null}
       
       <nav className="header-nav">
         <ul>
@@ -52,7 +53,7 @@ const Header: React.FC = () => {
       </nav>
        {/*Shows logout is auth is true and login and signup if auth is false ;) */}
       <div className='auth-buttons'>
-      {state.isAuthenticated ? (
+      {state.loginState.loggedIn ? (
           <button className='logoutBtn' onClick={handleLogout}>Logout</button>
         ) : (
           <div className='auth-buttons'>
