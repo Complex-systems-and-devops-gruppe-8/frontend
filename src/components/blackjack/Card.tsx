@@ -1,6 +1,6 @@
 // Card.tsx
 import React from 'react';
-import '../../styling/blackjack/Card.css';
+import '../../Styling/blackjack/Card.css';
 import {Card} from '../../state/blackjackState/blackjackTypes';
 
 

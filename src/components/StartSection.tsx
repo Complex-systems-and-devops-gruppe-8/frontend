@@ -8,5 +8,4 @@ function StartSection() {
     </section>
   );
 }
-
 export default StartSection;
