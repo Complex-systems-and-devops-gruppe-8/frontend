@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../state/userState/userContext';
+import React, {useContext, useEffect, useState, } from 'react';
+import { AuthContext} from '../state/authState/authContext';
 import { useNavigate } from 'react-router-dom';
 import LoginPopUp from './LoginPopUp';
 import '../Styling/Header.css';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const { state } = useContext(UserContext);
+  const { state,dispatch } =  useContext(AuthContext);
   const navigate = useNavigate();
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
 
@@ -24,6 +24,7 @@ const Header: React.FC = () => {
   };
 
   const handleLogout = () => {
+    dispatch({ type: 'LOGOUT_START' });
     console.log('logout pressed');
   };
 
@@ -41,7 +42,7 @@ const Header: React.FC = () => {
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="logo">🤑LOGO🤑</div>
-      {loginOpen && <LoginPopUp handleLogin={handleLogin} handleClose={handleClose} />}
+      {loginOpen ? (  <LoginPopUp handleClose={handleClose} />) : null}
       
       <nav className="header-nav">
         <ul>
@@ -50,7 +51,7 @@ const Header: React.FC = () => {
       </nav>
 
       <div className='auth-buttons'>
-        {state.isAuthenticated ? (
+      {state.loginState.loggedIn ? (
           <button className='logoutBtn' onClick={handleLogout}>Logout</button>
         ) : (
           <div className='auth-buttons'>
