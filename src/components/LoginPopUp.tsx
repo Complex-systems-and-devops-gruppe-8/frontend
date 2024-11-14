@@ -51,7 +51,7 @@ function LoginPopUp({ handleClose }: LoginPopUpProps) {
         }
     };
     const onClose = () => {
-      dispatch({ type: 'LOGOUT' });
+      dispatch({ type: 'LOGOUT_START' });
         handleClose();
     };
 

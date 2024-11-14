@@ -23,7 +23,7 @@ const Header: React.FC = () => {
     console.log('register pressed');
   };
   const handleLogout = () => {
-    dispatch({ type: 'LOGOUT' });
+    dispatch({ type: 'LOGOUT_START' });
     console.log('logout pressed');
   };
 

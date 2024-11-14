@@ -1,22 +1,25 @@
-import React, { createContext,  useEffect, Dispatch,useReducer, useRef    } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext,  useEffect, Dispatch,useReducer    } from 'react';
+ 
 import { sirenClient } from '../../api/sirenClient';
 import { Action } from '@siren-js/client';
 import { AuthState, AuthAction  } from './authTypes'
 import { authReducer  } from './userReducer'
 import { AuthTokens } from './authTypes';
  import { RefreshedAccessToken } from './authTypes'; 
-
+ import { setCookie, getCookie, deleteCookie } from '../../utils/cookieUtils';
 
 
 const initialState: AuthState = {
   authTokens: { accessToken: null, refreshToken: null },
+  refreshTokens: false,
   
   rootEntity: null,
   authEntity: null,
+  
   loginState: {
     startLogIn: false,
     error: null,
+    startLogOut: false,
     loggedIn: false,
     inputUsername: '',
     inputPassword: ''
@@ -39,8 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
  // const [refreshToken, setRefreshToken] = useState<string | null>(null);
   //const [rootEntity, setRootEntity] = useState<any>(null);
   //const [authEntity, setAuthEntity] = useState<any>(null);
-  const navigate = useNavigate();
-
+  
   /**
    * Initializes the authentication system by fetching root and auth entities.
    * Runs once when the component mounts.
@@ -59,24 +61,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch (error) {
         console.error('Failed to initialize:', error);
       }
-    };
-    init();
+      // Initialize cookies
+     const accessToken = getCookie('accessToken');
+     const refreshToken = getCookie('refreshToken');
+     
+     if (accessToken && refreshToken) {
+       dispatch({ type: 'SET_TOKENS_FROM_COOKIES', payload: {   accessToken , refreshToken } });
+       sirenClient.setAccessToken(accessToken || null);
+
+
+      }
+     }
+     init() 
+    
+
   }, []);
 
-  const tokenRef = useRef<{ accessToken: string | null; refreshToken: string | null }>({
-    accessToken: null,
-    refreshToken: null
-  });
+  useEffect(() => {
+    if(state.refreshTokens) {
+      refreshAccessToken();
+    }
+  }
+  , [state.refreshTokens]);
 
   /**
    * Updates the token reference and Siren client when tokens change.
    * Ensures the latest token values are available for the refresh mechanism.
    */
   useEffect(() => {
-    tokenRef.current = {
-      accessToken: state.authTokens.accessToken,
-      refreshToken: state.authTokens.refreshToken
-    };
     sirenClient.setAccessToken(state.authTokens?.accessToken || null);
   }, [state.authTokens]);
 
@@ -89,7 +101,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       login();
     }
   }, [state.loginState.startLogIn]);
-
+  
+  useEffect(() => {
+    if (state.loginState.startLogOut) {
+      logout();
+    }
+  }, [state.loginState.startLogOut]);
 
   /**
    * Automatic token refresh mechanism.
@@ -98,44 +115,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    */
   useEffect(() => {
     let refreshTimer: number;
-
-    const refreshAccessToken = async () => {
-      // Use the ref to get current token values
-      const { accessToken, refreshToken } = tokenRef.current;
-
-      console.log('Attempting token refresh...');
-
-      if (!state.authEntity || !state.authTokens.accessToken || !state.authTokens.refreshToken) {
-        console.log('Missing required data for refresh');
-        return;
-      }
-
-      try {
-        const refreshAction = state.authEntity.actions.find(
-          (action: Action) => action.name === 'refresh-access-token'
-        );
-
-        if (!refreshAction) {
-          console.log('Refresh action not found');
-          return;
-        }
-
-        const response = await sirenClient.submitAndParse<RefreshedAccessToken>(refreshAction, {
-          accessToken,
-          refreshToken
-        });
-
-        console.log('Token refresh successful');
-
-        const tokens = response.properties;
-        dispatch({ type: 'SET_ACCESS_TOKEN', payload: tokens.accessToken });
-      } catch (error) {
-        console.error('Token refresh failed:', error);
-        logout();
-        navigate('/login');
-      }
-    };
-
     if (state.authEntity) {
       refreshTimer = window.setInterval(refreshAccessToken, 270000);
     }
@@ -145,9 +124,62 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         window.clearInterval(refreshTimer);
       }
     };
-  }, [state.authEntity, navigate]);
+  }, [state.authEntity]);
 
 
+
+  
+  const refreshAccessToken = async () => {
+    // Use the ref to get current token values
+    const { accessToken, refreshToken } = state.authTokens;
+
+    console.log('Attempting token refresh...');
+    
+
+
+    if (!state.authEntity || !state.authTokens.accessToken || !state.authTokens.refreshToken) {
+      console.log('Missing required data for refresh');
+      return;
+    }
+
+    try {
+      const refreshAction = state.authEntity.actions.find(
+        (action: Action) => action.name === 'refresh-access-token'
+      );
+
+      if (!refreshAction) {
+        console.log('Refresh action not found');
+        return;
+      }
+
+      const response = await sirenClient.submitAndParse<RefreshedAccessToken>(refreshAction, {
+        accessToken,
+        refreshToken
+      });
+
+      console.log('Token refresh successful');
+
+      const tokens = response.properties;
+      
+      dispatch({ type: 'TOKEN_VALIDATION_SUCCESS', payload: tokens.accessToken });
+      setCookie('accessToken', tokens.accessToken, 1);
+    } catch (error) {
+      dispatch({ type: 'TOKEN_VALIDATION_FAILURE'    });
+      console.error('Token refresh failed:', error);
+      logout();
+      
+    }
+  };
+   
+
+
+
+
+  /**
+   * 
+   *  Logs the user in by submitting the login action with the provided credentials.
+   * 
+   */  
   const login = async () => {
     // Ensure authEntity is available
   if (!state.authEntity) {
@@ -173,10 +205,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         username,
         password
       });
-    console.log(response);
+  
       // If successful, retrieve and dispatch tokens
     const tokens = response.properties;
     dispatch({ type: 'LOGIN_SUCCESS', payload: tokens });
+    setCookie('accessToken', tokens.accessToken!, 1);
+    setCookie('refreshToken', tokens.refreshToken!, 1);
     console.log('Login successful');
     
      
@@ -197,9 +231,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     }
   };
+
+
+
+  /**
+   * Logs the user out by clearing tokens and cookies.
+   */
   const logout = () => {
-    dispatch({ type: 'LOGOUT' });
+   
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
     sirenClient.setAccessToken(null);
+    dispatch({ type: 'LOGOUT_SUCCESS' });
+
+
+   
   };
 
   return (

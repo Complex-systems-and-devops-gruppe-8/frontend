@@ -13,6 +13,7 @@ export const authReducer = (
         loginState: {
             startLogIn: false,
             error: null,
+            startLogOut: false,
             loggedIn: true,
             inputUsername: '',
             inputPassword: ''
@@ -31,12 +32,26 @@ export const authReducer = (
                 startLogIn: true,
                 error: null,
                 loggedIn: false,
+                startLogOut: false,
                 inputUsername: action.payload.username,
                 inputPassword: action.payload.password
             }
         }
         
-    case 'LOGOUT':
+    case 'LOGOUT_START':
+        return {
+            ...state,
+            loginState: {
+                startLogIn: false,
+                error: null,
+                loggedIn: false,
+                startLogOut: true,
+                inputUsername: '',
+                inputPassword: ''
+            }
+         
+        }
+    case 'LOGOUT_SUCCESS':
         return {
             ...state,
          authTokens: {
@@ -47,10 +62,14 @@ export const authReducer = (
                 startLogIn: false,
                 error: null,
                 loggedIn: false,
+                startLogOut: false,
                 inputUsername: '',
                 inputPassword: ''
             }
         }
+
+
+
     case 'ROOT_ENTITY':
         return {
             ...state,
@@ -61,22 +80,16 @@ export const authReducer = (
             ...state,
             authEntity: action.payload
         }      
-    case 'SET_ACCESS_TOKEN':
+    case 'SET_TOKENS_FROM_COOKIES':
         return {
             ...state,
+            refreshTokens: true,
             authTokens: {
-                ...state.authTokens,
-                accessToken: action.payload
+                accessToken: action.payload.accessToken,
+                refreshToken: action.payload.refreshToken
             }
         }
-    case 'SET_REFRESH_TOKEN':
-        return {
-            ...state,
-            authTokens: {
-                ...state.authTokens,
-                refreshToken: action.payload
-            }
-        }
+    
     case 'LOGIN_FAILURE':
         return {
             ...state,
@@ -84,8 +97,43 @@ export const authReducer = (
                 startLogIn: false,
                 error: action.payload,
                 loggedIn: false,
+                startLogOut: false,
                 inputUsername: state.loginState.inputUsername,
                 inputPassword: state.loginState.inputPassword
+            }
+        }
+    case 'TOKEN_VALIDATION_SUCCESS':
+        return {
+            ...state,
+            refreshTokens: false,
+            authTokens: {
+                ...state.authTokens,
+                accessToken: action.payload
+            },
+            loginState: {
+                startLogIn: false,
+                error: null,
+                startLogOut: false,
+                loggedIn: true,
+                inputUsername: '',
+                inputPassword: ''
+            }
+        }
+    case 'TOKEN_VALIDATION_FAILURE':
+        return {
+            ...state,
+            refreshTokens: false,
+            authTokens: {
+                refreshToken: null,
+                accessToken: null
+            },
+            loginState: {
+                startLogIn: false,
+                error: null,
+                startLogOut: false,
+                loggedIn: false,
+                inputUsername: '',
+                inputPassword: ''
             }
         }
     default:   
