@@ -1,0 +1,72 @@
+/* Footer Styling */
+.footer {
+    
+    padding: 3rem 0;
+    font-family: 'Times New Roman', serif;
+    margin-top: 1rem; /* Adds space between footer and content */
+
+  }
+  
+  /* Footer Container */
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  /* Footer Text */
+  .footer-text {
+    font-size: 1.25rem;
+    color: #d4af37;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 6px rgba(212, 175, 55, 0.7);
+    letter-spacing: 0.1rem;
+    font-weight: bold;
+  }
+  
+  /* Footer Links */
+  .footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding-top: 1rem;
+  }
+  
+  /* Footer Link Styling */
+  .footer-link {
+    color: #f5e0b7;
+    text-decoration: none;
+    font-size: 1.125rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .footer-link:hover {
+    color: #d4af37;
+    text-shadow: 0 2px 5px rgba(212, 175, 55, 0.8);
+    transform: translateY(-3px);
+  }
+  
+  /* Hover effects for footer links */
+  .footer-link:before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .footer-link:hover:before {
+    opacity: 1;
+  }
+  

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../state/userState/userContext';
 import { useNavigate } from 'react-router-dom';
 import LoginPopUp from './LoginPopUp';
-import '../Styling/Header.css';
+import '../Styling/landingpage/Header.css';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
@@ -27,6 +27,10 @@ const Header: React.FC = () => {
     console.log('logout pressed');
   };
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -40,15 +44,9 @@ const Header: React.FC = () => {
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-      <div className="logo">🤑LOGO🤑</div>
+      <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>🤑LOGO🤑</div>
       {loginOpen && <LoginPopUp handleLogin={handleLogin} handleClose={handleClose} />}
       
-      <nav className="header-nav">
-        <ul>
-          <li><a href="#home">Home</a></li>
-        </ul>
-      </nav>
-
       <div className='auth-buttons'>
         {state.isAuthenticated ? (
           <button className='logoutBtn' onClick={handleLogout}>Logout</button>
