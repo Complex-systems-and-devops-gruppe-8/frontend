@@ -23,6 +23,8 @@ export type BlackJackState = {
     isGameStarted: boolean
     roundTimer: number
      
+    blackjackEntity: any
+
     testMode: boolean
     round: number
     roundStarted: boolean
@@ -66,4 +68,5 @@ export type BlackJackState = {
     | { type: 'RESET_TIME_BETWEEN_CARDS'}
     | { type: 'RESET_GAME'; }
     | { type: 'SET_NOT_PLACED_BET'; payload: number }
+    | { type: 'SET_BLACKJACK_ENTITY'; payload: any }
  

@@ -38,10 +38,7 @@ export const AuthContext = createContext<
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
- // const [accessToken, setAccessToken] = useState<string | null>(null);
- // const [refreshToken, setRefreshToken] = useState<string | null>(null);
-  //const [rootEntity, setRootEntity] = useState<any>(null);
-  //const [authEntity, setAuthEntity] = useState<any>(null);
+ 
   
   /**
    * Initializes the authentication system by fetching root and auth entities.

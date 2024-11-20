@@ -4,11 +4,14 @@ import {
     Dispatch,
     ReactNode,
     useEffect,
+    useContext,
     
     
   } from 'react'
   import { BlackJackState, BlackJackAction, Card } from './blackjackTypes'
   import { blackjackReducer } from './blackjackReducer'
+  import { AuthContext } from '../authState/authContext'
+  import { sirenClient } from '../../api/sirenClient';
    
 
   // Define the initial state
@@ -28,6 +31,7 @@ import {
     roundTimer: 30,
     testMode: true,
     notPlacedBet: 0,
+    blackjackEntity: null,
     round: 0,
     roundStarted: false,
     hit: false,
@@ -60,6 +64,27 @@ import {
   
   export const BlackJackProvider = ({ children }: BlackJackProviderProps ) => {
     const [state, dispatch] = useReducer(blackjackReducer, initialState)
+    const { state: authState  } = useContext(AuthContext);
+
+    // API STUFF
+    useEffect(() => {
+      const init = async () => {
+        try {
+          const blackLink =authState.rootEntity.links.find((link: any) => link.rel.includes('blackjack'));
+          if (blackLink) {
+            const auth = await sirenClient.followAndParse(blackLink.href);
+            dispatch({ type: 'SET_BLACKJACK_ENTITY', payload: auth })
+          }
+        } catch (error) {
+          console.error('Failed to initialize:', error);
+        }
+      }
+      init()
+
+    }, []);
+
+
+
 
     useEffect(() => {
         if (state.roundStarted) {
@@ -178,12 +203,36 @@ import {
     }
     else {
         // Make a request to the server to deal cards
+        
     
     } 
 
     dispatch({ type: 'START_ROUND' });
 
     };
+
+    const callStartGame = async () => {
+        if (state.blackjackEntity) {
+          try {
+            const startGameAction = state.blackjackEntity.actions.find(
+              (action: any) => action.name === 'start-game'
+            );
+    
+            if (!startGameAction) {
+              console.error('Start game action not found');
+              return;
+            }
+    
+            const response = await sirenClient.submitAndParse(startGameAction, {});
+            dispatch({ type: 'START_GAME', payload: response });
+          } catch (error) {
+            console.error('Failed to start game:', error);
+          }
+        }
+      };
+
+
+
     const hitPlayer = () => {
         if (state.testMode) {
             const newCard = getRandomCard();

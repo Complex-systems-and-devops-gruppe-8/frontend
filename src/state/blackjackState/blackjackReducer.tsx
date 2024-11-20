@@ -120,6 +120,7 @@ export const blackjackReducer = (
         }
     case 'RESET_GAME':
         return {
+            
             dealerCards: [],
             playerCards: [],
             placedBet: 0,
@@ -139,6 +140,7 @@ export const blackjackReducer = (
             roundStarted: false,
             hit: false,
             playerStand: false,
+            blackjackEntity: null,
             dealerStand: false,
             dealerScore: 0,
             playerScore: 0,
