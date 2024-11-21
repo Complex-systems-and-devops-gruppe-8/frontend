@@ -28,10 +28,6 @@ const Header: React.FC = () => {
     console.log('logout pressed');
   };
 
-  const handleLogoClick = () => {
-    navigate('/');
-  };
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -45,10 +41,15 @@ const Header: React.FC = () => {
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-
       <div className="logo">🤑LOGO🤑</div>
       {loginOpen ? (  <LoginPopUp handleClose={handleClose} />) : null}
       
+      <nav className="header-nav">
+        <ul>
+          <li><a href="#home">Home</a></li>
+        </ul>
+      </nav>
+
       <div className='auth-buttons'>
       {state.loginState.loggedIn ? (
           <button className='logoutBtn' onClick={handleLogout}>Logout</button>
