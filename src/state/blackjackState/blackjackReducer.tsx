@@ -1,3 +1,4 @@
+import { ac } from 'vitest/dist/chunks/reporters.D7Jzd9GS.js'
 import { BlackJackState , BlackJackAction } from './blackjackTypes'
 
 export const blackjackReducer = (
@@ -7,6 +8,8 @@ export const blackjackReducer = (
   const { type } = action
 
   switch (type) {
+
+    /*
     case 'START_GAME':
       return {
         ...state,
@@ -53,19 +56,7 @@ export const blackjackReducer = (
             
           
         }
-    case 'HIT':
-        return {
-            ...state,
-            hit: true,
-            roundTimer: 30,
-            
-        }
-    case 'PLAYER_STAND':
-        return {
-            ...state,
-            playerStand: true,
-            roundTimer: 0,
-        }
+    
     case 'DEALER_STAND':
         return {
             ...state,
@@ -157,11 +148,70 @@ export const blackjackReducer = (
                 ...state,
                 isDraw: true,
             }
+                */
+
+
+        case 'UPDATE_PLAYER_SCORE':
+            return {
+                ...state,
+                playerScore: action.payload,
+            }
+        case 'UPDATE_DEALER_SCORE':
+            return {
+                ...state,
+                dealerScore: action.payload,
+            }
+
+
+            case 'PLACE_BET':
+        return {
+            ...state,
+            placedBet: action.payload,
+            
+        }
         case 'SET_NOT_PLACED_BET':
             return {
                 ...state,
                 notPlacedBet: action.payload,
             }
+       
+            case 'SET_BLACKJACK_ENTITY':
+            return {
+                ...state,
+                blackjackEntity: action.payload,
+            }
+            
+        case 'INIT_GAME':
+            return {
+                ...state,
+                 playerCards: action.payload.playerHand.cards,
+                    dealerCards: action.payload.dealerHand.cards,
+                    gameID: action.payload.id,
+                placedBet: action.payload.betAmount,
+                isGameStarted: true,
+            }
+        case 'UPDATE_GAME_STATE':
+            return {
+                ...state,
+                 playerCards: action.payload.playerHand.cards,
+                dealerCards: action.payload.dealerHand.cards,
+                gameID: action.payload.id,
+                placedBet: action.payload.betAmount,
+                isGameStarted: true,
+            }
+            case 'HIT':
+                return {
+                    ...state,
+                    hit: true,
+                   
+                    
+                }
+            case 'PLAYER_STAND':
+                return {
+                    ...state,
+                    playerStand: true,
+                   
+                }
     default:
       return state
   }

@@ -1,6 +1,9 @@
   // Define the Card type
  
-
+export enum bjAction{
+  HIT = 'HIT',
+  STAND = 'STAND',
+}
   
 export type Card = {
     rank: '0' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'J' | 'Q' | 'K' | 'A';
@@ -11,19 +14,34 @@ type Coins = {
     value: number;
   };
   // Define props that Card component will receive
- 
+
+export type BlackjackSimpleState = {
+  dealerCards: Card[]
+  playerCards: Card[]
+  placedBet: number
+
+
+}
+
 
 export type BlackJackState = {
     dealerCards: Card[]
     playerCards: Card[]
+    
+    
+    
     placedBet: number
     notPlacedBet: number
+
+
     coins: Coins[]
     message: string
     isGameStarted: boolean
+    
     roundTimer: number
      
     blackjackEntity: any
+    gameID: number | null
 
     testMode: boolean
     round: number
@@ -69,4 +87,7 @@ export type BlackJackState = {
     | { type: 'RESET_GAME'; }
     | { type: 'SET_NOT_PLACED_BET'; payload: number }
     | { type: 'SET_BLACKJACK_ENTITY'; payload: any }
+    | { type: 'SET_GAME_ENTITY'; payload: any }
+    | { type: 'INIT_GAME'; payload: any }
+    | { type: 'UPDATE_GAME_STATE'; payload: any }
  

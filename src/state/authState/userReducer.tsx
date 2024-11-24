@@ -136,6 +136,16 @@ export const authReducer = (
                 inputPassword: ''
             }
         }
+    case 'SET_REFRESH_TIMER':
+        return {
+            ...state,
+            refreshTimerFlag: true
+        }
+    case 'CLEAR_REFRESH_TIMER':
+        return {
+            ...state,
+            refreshTimerFlag: false
+        }
     default:   
         return state
         

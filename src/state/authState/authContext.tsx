@@ -15,7 +15,7 @@ const initialState: AuthState = {
   
   rootEntity: null,
   authEntity: null,
-  
+  refreshTimerFlag: false,
   loginState: {
     startLogIn: false,
     error: null,
@@ -45,6 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    * Runs once when the component mounts.
    */
   useEffect(() => {
+    if(!state.rootEntity) {
     const init = async () => {
       try {
         const root = await sirenClient.followAndParse('/');
@@ -70,7 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
      }
      init() 
-    
+    }
 
   }, []);
 
@@ -112,13 +113,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    */
   useEffect(() => {
     let refreshTimer: number;
-    if (state.authEntity) {
-      refreshTimer = window.setInterval(refreshAccessToken, 270000);
+    if (state.authEntity,!state.refreshTimerFlag) {
+      refreshTimer = window.setInterval(refreshAccessToken, 150000);
+
+      dispatch({ type: 'SET_REFRESH_TIMER' });
     }
 
     return () => {
       if (refreshTimer) {
         window.clearInterval(refreshTimer);
+        dispatch({ type: 'CLEAR_REFRESH_TIMER' });
       }
     };
   }, [state.authEntity]);
@@ -206,6 +210,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // If successful, retrieve and dispatch tokens
     const tokens = response.properties;
     dispatch({ type: 'LOGIN_SUCCESS', payload: tokens });
+  
+    sirenClient.setAccessToken(tokens.accessToken || null);
     setCookie('accessToken', tokens.accessToken!, 1);
     setCookie('refreshToken', tokens.refreshToken!, 1);
     console.log('Login successful');

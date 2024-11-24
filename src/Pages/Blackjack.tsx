@@ -13,7 +13,7 @@ function BlackjackPage() {
   return (
     <> 
       <Header />
-      {state.loginState.loggedIn ? (
+      {state.loginState.loggedIn&&state.authTokens.accessToken!==null&&state.authTokens.refreshToken!==null ? (
          <BlackJackProvider>
      
          <BlackJackTable />

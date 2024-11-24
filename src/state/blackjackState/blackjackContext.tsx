@@ -8,7 +8,7 @@ import {
     
     
   } from 'react'
-  import { BlackJackState, BlackJackAction, Card } from './blackjackTypes'
+  import { BlackJackState, BlackJackAction, Card, BlackjackSimpleState,bjAction } from './blackjackTypes'
   import { blackjackReducer } from './blackjackReducer'
   import { AuthContext } from '../authState/authContext'
   import { sirenClient } from '../../api/sirenClient';
@@ -29,9 +29,10 @@ import {
     message: '',
     isGameStarted: false,
     roundTimer: 30,
-    testMode: true,
+    testMode: false,
     notPlacedBet: 0,
     blackjackEntity: null,
+    gameID: null,
     round: 0,
     roundStarted: false,
     hit: false,
@@ -66,26 +67,81 @@ import {
     const [state, dispatch] = useReducer(blackjackReducer, initialState)
     const { state: authState  } = useContext(AuthContext);
 
-    // API STUFF
     useEffect(() => {
+      if(authState.authEntity && authState.authTokens.accessToken && !state.blackjackEntity)  {
       const init = async () => {
         try {
-          const blackLink =authState.rootEntity.links.find((link: any) => link.rel.includes('blackjack'));
-          if (blackLink) {
-            const auth = await sirenClient.followAndParse(blackLink.href);
-            dispatch({ type: 'SET_BLACKJACK_ENTITY', payload: auth })
+          // Find the game link from the rootEntity
+          const gameLink = authState?.rootEntity?.links?.find((link: any) => link.rel.includes('game'));
+          if (!gameLink) {
+            console.error('Game link not found');
+            return;
           }
+         
+          // Fetch and parse the game entity
+          const game = await sirenClient.followAndParse(gameLink.href);
+          if (!game?.links) {
+            console.error('Game entity has no links');
+            return;
+          }
+          
+          // Find the blackjack link
+          const blackLink = game.links.find((link: any) => link.rel.includes('blackjack'));
+          if (!blackLink) {
+            console.error('Blackjack link not found');
+            return;
+          }
+    
+          // Fetch and parse the blackjack entity
+          const blackjack = await sirenClient.followAndParse(blackLink.href);
+        
+          if (!blackjack) {
+            console.error('Failed to fetch blackjack entity');
+            return;
+          }
+    
+          // Dispatch the blackjack entity to the state
+          dispatch({ type: 'SET_BLACKJACK_ENTITY', payload: blackjack });
         } catch (error) {
           console.error('Failed to initialize:', error);
         }
+      };
+      
+      // Invoke the initialization function
+      init();
+    }
+    }, [authState.authEntity, authState.authTokens]);
+
+    useEffect(() => {
+      if(state.placedBet > 0 && !state.isGameStarted) {
+        callStartGame();
       }
-      init()
-
-    }, []);
-
+    }
+    , [state.placedBet]);
 
 
+  useEffect(() => {
+    if (state.hit) {
+        doAction(bjAction.HIT);
+    }
+    if (state.playerStand)
+    {
+      doAction(bjAction.STAND);
+    }
+}
+, [state.hit, state.playerStand]);
 
+
+useEffect(() => {
+  dispatch({type: 'UPDATE_DEALER_SCORE', payload: calcScore(state.dealerCards) });
+}, [state.dealerCards]);
+
+useEffect(() => {
+  console.log('player cards', state.playerCards)
+  dispatch({type: 'UPDATE_PLAYER_SCORE', payload: calcScore(state.playerCards) });
+}, [state.playerCards]);
+
+/* 
     useEffect(() => {
         if (state.roundStarted) {
           const timer = setInterval(() => {
@@ -118,7 +174,12 @@ import {
             dealCards();
         }
     
-    }, [state.round]);
+    }, [state.round]); 
+   
+    
+
+
+
     useEffect(() => {
         if (state.hit) {
             hitPlayer();
@@ -177,7 +238,7 @@ import {
         }
       }
     }, [state.playerStand,state.dealerStand]);
-
+     */
     const getRandomCard = (): Card  => {
         const ranks: Card ['rank'][] = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
         const suits: Card ['suit'][] = ['Hearts' , 'Tiles' , 'Pikes' , 'Clovers'];
@@ -194,25 +255,25 @@ import {
    
     const dealCards = () => {
     if (state.testMode) {
-
-     
         dispatch({ type: 'DEAL_CARD_TO_PLAYER', payload: getRandomCard () });
         dispatch({ type: 'DEAL_CARD_TO_PLAYER', payload: getRandomCard () });
         dispatch({ type: 'DEAL_CARD_TO_DEALER', payload: getRandomCard () });
         dispatch({ type: 'DEAL_CARD_TO_DEALER', payload: {suit: 'Blank', rank: '0'} });
+        dispatch({ type: 'START_ROUND' });
     }
     else {
         // Make a request to the server to deal cards
-        
+       
     
     } 
 
-    dispatch({ type: 'START_ROUND' });
+    
 
     };
 
     const callStartGame = async () => {
         if (state.blackjackEntity) {
+       
           try {
             const startGameAction = state.blackjackEntity.actions.find(
               (action: any) => action.name === 'start-game'
@@ -222,9 +283,19 @@ import {
               console.error('Start game action not found');
               return;
             }
-    
-            const response = await sirenClient.submitAndParse(startGameAction, {});
-            dispatch({ type: 'START_GAME', payload: response });
+            const betAmount = state.notPlacedBet;
+            if (!betAmount) {
+              console.error('No bet placed');
+              return;
+            }
+            const response = await sirenClient.submitAndParse<BlackjackSimpleState>(startGameAction, {betAmount: betAmount});
+             
+            
+            
+         
+
+            dispatch({ type: 'INIT_GAME', payload: response  });
+
           } catch (error) {
             console.error('Failed to start game:', error);
           }
@@ -233,16 +304,40 @@ import {
 
 
 
-    const hitPlayer = () => {
-        if (state.testMode) {
-            const newCard = getRandomCard();
-            dispatch({ type: 'DEAL_CARD_TO_PLAYER', payload: newCard });
+      const doAction = async (action: bjAction) => {
+        if (state.blackjackEntity) {
+          try {
+            const actionToPerform = state.blackjackEntity.actions.find(
+              (act: any) => act.name === 'do-action'
+            );
             
+            if (!actionToPerform) {
+              console.error('Action not found');
+              return;
+            }
+      
+            // Ensure `id` is replaced in the `href`
+            const gameId = state.gameID; // Assuming `id` is stored in `gameEntity`
+            if (!gameId) {
+              console.error('Game ID not found in state');
+              return;
+            }
+            
+             
+
+            // Perform the action
+            const response = await sirenClient.submitAndParse<BlackjackSimpleState>(actionToPerform,  
+              { choice: action },gameId.toString()
+            );
+      
+            // Dispatch updated game state
+            dispatch({ type: 'UPDATE_GAME_STATE', payload: response });
+          } catch (error) {
+            console.error('Failed to perform action:', error);
+          }
         }
-        else {
-            // Make a request to the server to deal cards
-        }
-    }
+      };
+
     const flipCard = () => {
       // Find and remove the blank card
       const updatedDealerCards = state.dealerCards.filter(card => !(card.suit === 'Blank' && card.rank === '0'));
@@ -294,7 +389,7 @@ import {
                 score += 10; // Treat this Ace as 11
             }
         }
-    
+        console.log('score', score)
         return score;
       }
 
