@@ -102,11 +102,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [state.loginState.startLogIn]);
   //this is used for debuuuging
-  
+  /*
   useEffect(() => {
     console.log('Auth Tokens Updated:', state.authTokens);
   }, [state.authTokens]);
-  
+  */
   useEffect(() => {
     if (state.loginState.startLogOut) {
       logout();

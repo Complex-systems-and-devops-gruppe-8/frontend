@@ -177,38 +177,8 @@ useEffect(() => {
     
 
 
- 
-    const getRandomCard = (): Card  => {
-        const ranks: Card ['rank'][] = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-        const suits: Card ['suit'][] = ['Hearts' , 'Tiles' , 'Pikes' , 'Clovers'];
-    
-        // Generate a random card by selecting a random rank and suit
-        const randomRank = ranks[Math.floor(Math.random() * ranks.length)];
-        const randomSuit = suits[Math.floor(Math.random() * suits.length)];
-    
-       
-        // Return a card object with rank and suit properties
-        return { suit: randomSuit, rank: randomRank };
-      };
   
    
-    const dealCards = () => {
-    if (state.testMode) {
-        dispatch({ type: 'DEAL_CARD_TO_PLAYER', payload: getRandomCard () });
-        dispatch({ type: 'DEAL_CARD_TO_PLAYER', payload: getRandomCard () });
-        dispatch({ type: 'DEAL_CARD_TO_DEALER', payload: getRandomCard () });
-        dispatch({ type: 'DEAL_CARD_TO_DEALER', payload: {suit: 'Blank', rank: '0'} });
-        dispatch({ type: 'START_ROUND' });
-    }
-    else {
-        // Make a request to the server to deal cards
-       
-    
-    } 
-
-    
-
-    };
 
     const callStartGame = async () => {
         if (state.blackjackEntity) {
@@ -232,7 +202,7 @@ useEffect(() => {
             
             
          
-            console.log(response.id);
+            
             dispatch({ type: 'INIT_GAME', payload: response  });
 
           } catch (error) {
@@ -257,14 +227,14 @@ useEffect(() => {
       
             // Ensure `id` is replaced in the `href`
             const gameId = state.gameID; // Assuming `id` is stored in `gameEntity`
-            console.log(gameId);
+           
             if (!gameId) {
               console.error('Game ID not found in state');
               return;
             }
             
              
-            console.log(actionToPerform)
+         
             // Perform the action
             const response = await sirenClient.submitAndParse<BlackjackSimpleState>(actionToPerform,  
               { choice: action },gameId.toString()
@@ -278,32 +248,8 @@ useEffect(() => {
         }
       };
 
-    const flipCard = () => {
-      // Find and remove the blank card
-      const updatedDealerCards = state.dealerCards.filter(card => !(card.suit === 'Blank' && card.rank === '0'));
+ 
   
-      // Dispatch the updated dealer cards (without the blank card)
-      dispatch({
-        type: 'SET_DEALER_CARDS',
-        payload: updatedDealerCards,
-      });
-    };
-    const hitDealer = () => {
-      if (state.testMode) {
-        const newCard = getRandomCard();
-  
-        // Check if there is a blank card in the dealer's hand
-        if (state.dealerCards.some(card => card.suit === 'Blank' && card.rank === '0')) {
-          // Remove blank card and dispatch updated deck
-          flipCard();
-        }
-  
-        // Dispatch the new card to the dealer's deck
-        dispatch({ type: 'DEAL_CARD_TO_DEALER', payload: newCard });
-      } else {
-        // Make a request to the server to deal cards
-      }
-    };
 
     const calcScore = (cards: Card[]): number => {
         let score = 0;
