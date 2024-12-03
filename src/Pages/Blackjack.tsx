@@ -7,7 +7,7 @@ import { AuthContext} from '../state/authState/authContext';
 import { BlackJackProvider } from '../state/blackjackState/blackjackContext';
 
 function BlackjackPage() {
-  const { state,dispatch } =  useContext(AuthContext);
+  const { state } =  useContext(AuthContext);
 
 
   return (

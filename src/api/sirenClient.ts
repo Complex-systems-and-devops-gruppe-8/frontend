@@ -1,6 +1,6 @@
 import { follow, parse, submit, ActionFiller } from '@siren-js/client';
 import type { Action, Entity } from '@siren-js/client';
-import { at } from 'vitest/dist/chunks/reporters.D7Jzd9GS.js';
+ 
 
 /**
  * Client for making authenticated requests to a Siren API.
