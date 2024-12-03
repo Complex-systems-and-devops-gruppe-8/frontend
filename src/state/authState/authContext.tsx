@@ -3,7 +3,7 @@ import React, { createContext,  useEffect, Dispatch,useReducer    } from 'react'
 import { sirenClient } from '../../api/sirenClient';
 import { Action } from '@siren-js/client';
 import { AuthState, AuthAction  } from './authTypes'
-import { authReducer  } from './userReducer'
+import { authReducer  } from './authReducer'
 import { AuthTokens } from './authTypes';
  import { RefreshedAccessToken } from './authTypes'; 
  import { setCookie, getCookie, deleteCookie } from '../../utils/cookieUtils';
@@ -76,11 +76,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    if(state.refreshTokens) {
+    if (state.refreshTokens && state.authTokens.accessToken && state.authTokens.refreshToken) {
       refreshAccessToken();
     }
-  }
-  , [state.refreshTokens]);
+  }, [state.refreshTokens, state.authTokens]);
 
   /**
    * Updates the token reference and Siren client when tokens change.
@@ -97,8 +96,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (state.loginState.startLogIn) {
       login();
+      
+
+
     }
   }, [state.loginState.startLogIn]);
+  //this is used for debuuuging
+  
+  useEffect(() => {
+    console.log('Auth Tokens Updated:', state.authTokens);
+  }, [state.authTokens]);
   
   useEffect(() => {
     if (state.loginState.startLogOut) {
@@ -114,7 +121,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let refreshTimer: number;
     if (state.authEntity,!state.refreshTimerFlag) {
-      refreshTimer = window.setInterval(refreshAccessToken, 150000);
+      refreshTimer = window.setInterval(refreshAccessToken, 15000);
 
       dispatch({ type: 'SET_REFRESH_TIMER' });
     }
@@ -140,6 +147,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (!state.authEntity || !state.authTokens.accessToken || !state.authTokens.refreshToken) {
       console.log('Missing required data for refresh');
+        console.log('authEntity:', state.authEntity);
+  console.log('accessToken:', state.authTokens.accessToken);
+  console.log('refreshToken:', state.authTokens.refreshToken);
+      
       return;
     }
 
@@ -150,6 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (!refreshAction) {
         console.log('Refresh action not found');
+         
         return;
       }
 
@@ -200,7 +212,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   
     const { inputUsername: username, inputPassword: password } = state.loginState;
-    console.log(username, password);
+   
     try {
       const response = await sirenClient.submitAndParse<AuthTokens>(loginAction, {
         username,
@@ -209,12 +221,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
       // If successful, retrieve and dispatch tokens
     const tokens = response.properties;
-    dispatch({ type: 'LOGIN_SUCCESS', payload: tokens });
+    const payload = { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
+    dispatch({ type: 'LOGIN_SUCCESS', payload: payload });
   
     sirenClient.setAccessToken(tokens.accessToken || null);
     setCookie('accessToken', tokens.accessToken!, 1);
     setCookie('refreshToken', tokens.refreshToken!, 1);
     console.log('Login successful');
+   
     
      
   } catch (error) {

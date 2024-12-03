@@ -22,7 +22,7 @@ export type BlackjackSimpleState = {
 
 
 }
-
+ 
 
 export type BlackJackState = {
     dealerCards: Card[]
@@ -32,7 +32,7 @@ export type BlackJackState = {
     
     placedBet: number
     notPlacedBet: number
-
+    blackJackGameResult: String | null
 
     coins: Coins[]
     message: string
@@ -90,4 +90,5 @@ export type BlackJackState = {
     | { type: 'SET_GAME_ENTITY'; payload: any }
     | { type: 'INIT_GAME'; payload: any }
     | { type: 'UPDATE_GAME_STATE'; payload: any }
+    | {type: 'RESET_GAME_ACTION'}
  

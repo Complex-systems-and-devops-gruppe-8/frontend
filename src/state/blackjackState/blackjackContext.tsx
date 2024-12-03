@@ -8,7 +8,7 @@ import {
     
     
   } from 'react'
-  import { BlackJackState, BlackJackAction, Card, BlackjackSimpleState,bjAction } from './blackjackTypes'
+  import { BlackJackState, BlackJackAction, Card, BlackjackSimpleState,bjAction} from './blackjackTypes'
   import { blackjackReducer } from './blackjackReducer'
   import { AuthContext } from '../authState/authContext'
   import { sirenClient } from '../../api/sirenClient';
@@ -27,6 +27,7 @@ import {
       { color: '#950cad', value: 100 },
     ],
     message: '',
+    blackJackGameResult: null,
     isGameStarted: false,
     roundTimer: 30,
     testMode: false,
@@ -110,7 +111,7 @@ import {
       // Invoke the initialization function
       init();
     }
-    }, [authState.authEntity, authState.authTokens]);
+    }, [authState.authEntity, authState.authTokens, state.blackjackEntity]);
 
     useEffect(() => {
       if(state.placedBet > 0 && !state.isGameStarted) {
@@ -119,13 +120,32 @@ import {
     }
     , [state.placedBet]);
 
+    // USER_WIN,  DEALER_WIN, DRAW, ONGOING;
+  useEffect(() => {
+    if (state.blackJackGameResult === "USER_WIN") {
+      dispatch({type: 'PLAYER_WINS'});
+    }
+    else if (state.blackJackGameResult === "DEALER_WIN") {
+      dispatch({type: 'DEALER_WINS'});
+    }
+    else if (state.blackJackGameResult === "DRAW") {
+      dispatch({type: 'DRAW'});
+    }
+  }
+  , [state.blackJackGameResult]);
 
   useEffect(() => {
-    if (state.hit) {
+    const hit = state.hit;
+    const playerStand = state.playerStand;
+    dispatch({type: 'RESET_GAME_ACTION'})
+    
+    if (hit && state.blackJackGameResult === "ONGOING") {
+     
         doAction(bjAction.HIT);
     }
-    if (state.playerStand)
+    if (playerStand && state.blackJackGameResult === "ONGOING")
     {
+   
       doAction(bjAction.STAND);
     }
 }
@@ -134,111 +154,30 @@ import {
 
 useEffect(() => {
   dispatch({type: 'UPDATE_DEALER_SCORE', payload: calcScore(state.dealerCards) });
+
 }, [state.dealerCards]);
 
 useEffect(() => {
-  console.log('player cards', state.playerCards)
+  
   dispatch({type: 'UPDATE_PLAYER_SCORE', payload: calcScore(state.playerCards) });
+  
 }, [state.playerCards]);
-
-/* 
-    useEffect(() => {
-        if (state.roundStarted) {
-          const timer = setInterval(() => {
-            // Only decrement if the timer is greater than 0
-            if (state.roundTimer > 0) {
-                 
-              dispatch({ type: 'DECREMENT_TIMER' });
-            } else {
-              clearInterval(timer); // Stop the timer when it reaches 0
-              dispatch({ type: 'STOP_ROUND' }); // Optional: dispatch an action to handle the end of the game
-            }
-          }, 1000);
-    
-          return () => clearInterval(timer); // Cleanup on unmount
-        }
-      }, [state.roundStarted,state.roundTimer]); 
-      useEffect(() => {
-        if (state.timeBetweenCardsDelt > 0) {
-          const timer = setInterval(() => {
-            dispatch({ type: 'DECREMENT_TIME_BETWEEN_CARDS' });
-          }, 1000);
-      
-          return () => clearInterval(timer); // Cleanup to avoid multiple intervals
-        }
-      }, [state.timeBetweenCardsDelt]);
-
-    useEffect(() => {
-        if (state.round === 1)
-        {
-            dealCards();
-        }
-    
-    }, [state.round]); 
-   
+useEffect(() => {
+  if(state.dealerScore > 21) {
+    dispatch({type: 'DEALER_BUST'});
+  }
+}
+, [state.dealerScore]);
+useEffect(() => {
+  if(state.playerScore > 21) {
+    dispatch({type: 'PLAYER_BUST'});
+  }
+}
+, [state.playerScore]);
     
 
 
-
-    useEffect(() => {
-        if (state.hit) {
-            hitPlayer();
-        }
-    }, [state.hit]);
-    useEffect(() => {
-        if (state.playerCards.length !== 0 ) {
-       
-           dispatch({type: 'UPDATE_PLAYER_SCORE', payload: calcScore(state.playerCards) });  
-        }
-
-    }, [state.playerCards]);
-    useEffect(() => {
-        if (state.dealerCards.length !== 0 ) {
-            dispatch({type: 'UPDATE_DEALER_SCORE', payload: calcScore(state.dealerCards) });
-      
-        }
-
-    }, [state.dealerCards]);
-    useEffect(() => {
-      if(state.playerScore > 21) {
-     
-        dispatch({type: 'PLAYER_BUST'});
-        
-      }
-    }
-    ,[state.playerScore]);
-    useEffect(() => {
-      if(state.dealerScore > 21) {
-      
-        dispatch({type: 'DEALER_BUST'});
-      }
-      else if(state.dealerScore >= 17) {
-        dispatch({type: 'DEALER_STAND'});
-      }
-    }, [state.dealerScore]);
-    useEffect(() => {
-      console.log(state.timeBetweenCardsDelt)
-      if(state.playerStand && state.dealerScore < 17 && state.timeBetweenCardsDelt === 0) {
-        console.log('hit dealer')
-        hitDealer();
-      
-        dispatch({ type: 'RESET_TIME_BETWEEN_CARDS'});
-      }
-    }, [state.playerStand,state.playerBust,state.dealerCards,state.timeBetweenCardsDelt]);
-    useEffect(() => {
-      if(state.playerStand && state.dealerStand){
-        if(state.dealerBust == true && state.playerBust ==false || state.playerScore > state.dealerScore && state.playerBust == false && state.dealerBust == false) {
-        dispatch({type: 'PLAYER_WINS'});
-        }
-        else if(state.playerBust == true || state.playerScore < state.dealerScore && state.dealerBust == false) {
-          dispatch({type: 'DEALER_WINS'});
-        }
-        else if(state.playerScore == state.dealerScore && state.dealerBust == false && state.playerBust == false) {
-          dispatch({type: 'DRAW'});
-        }
-      }
-    }, [state.playerStand,state.dealerStand]);
-     */
+ 
     const getRandomCard = (): Card  => {
         const ranks: Card ['rank'][] = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
         const suits: Card ['suit'][] = ['Hearts' , 'Tiles' , 'Pikes' , 'Clovers'];
@@ -293,7 +232,7 @@ useEffect(() => {
             
             
          
-
+            console.log(response.id);
             dispatch({ type: 'INIT_GAME', payload: response  });
 
           } catch (error) {
@@ -318,13 +257,14 @@ useEffect(() => {
       
             // Ensure `id` is replaced in the `href`
             const gameId = state.gameID; // Assuming `id` is stored in `gameEntity`
+            console.log(gameId);
             if (!gameId) {
               console.error('Game ID not found in state');
               return;
             }
             
              
-
+            console.log(actionToPerform)
             // Perform the action
             const response = await sirenClient.submitAndParse<BlackjackSimpleState>(actionToPerform,  
               { choice: action },gameId.toString()
@@ -389,7 +329,7 @@ useEffect(() => {
                 score += 10; // Treat this Ace as 11
             }
         }
-        console.log('score', score)
+     
         return score;
       }
 
