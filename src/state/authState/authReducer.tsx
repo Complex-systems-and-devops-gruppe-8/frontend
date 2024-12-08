@@ -8,23 +8,23 @@ export const authReducer = (
     const { type } = action
     switch (type) {
     case 'LOGIN_SUCCESS':
-      return {
-        ...state,
-        loginState: {
-            startLogIn: false,
-            error: null,
-            startLogOut: false,
-            loggedIn: true,
-            inputUsername: '',
-            inputPassword: ''
-        },
-        authTokens: {
-            accessToken: action.payload.accessToken,
-            refreshToken: action.payload.refreshToken
-
-        }  
-        
-      }
+        const newState = {
+            ...state,
+            loginState: {
+              startLogIn: false,
+              error: null,
+              startLogOut: false,
+              loggedIn: true,
+              inputUsername: '',
+              inputPassword: ''
+            },
+            authTokens: {
+              accessToken: action.payload.accessToken,
+              refreshToken: action.payload.refreshToken
+            }
+          };
+         
+          return newState;
     case 'LOGIN_START':
         return {
             ...state,
@@ -135,6 +135,16 @@ export const authReducer = (
                 inputUsername: '',
                 inputPassword: ''
             }
+        }
+    case 'SET_REFRESH_TIMER':
+        return {
+            ...state,
+            refreshTimerFlag: true
+        }
+    case 'CLEAR_REFRESH_TIMER':
+        return {
+            ...state,
+            refreshTimerFlag: false
         }
     default:   
         return state
