@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../Styling/CoinFlip.css';
-import '../Styling/Header.css';
+import '../Styling/landingpage/Header.css';
 
 function CoinFlipPage() {
   const [isFlipping, setIsFlipping] = useState(false);
