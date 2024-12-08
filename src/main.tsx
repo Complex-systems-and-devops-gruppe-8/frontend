@@ -6,6 +6,7 @@ import PokerPage from './Pages/Poker';
 import CoinFlipPage from './Pages/CoinFlip';
 import BlackjackPage from './Pages/Blackjack';
 import RegisterPage from './Pages/RegisterPage';
+//import RoulettePage from './Pages/Roulette';
 import { BrowserRouter as Router, Route,Routes } from 'react-router-dom'
 import { UserProvider } from './state/userState/userContext'; 
 import { AuthProvider } from './state/authState/authContext';
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Route path="/poker" element={<PokerPage />} />
             <Route path="/blackjack" element={<BlackjackPage />} />
             <Route path="/register" element={<RegisterPage />} />
+  
           </Routes>
           </UserProvider>
         </AuthProvider>

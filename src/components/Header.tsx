@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState, } from 'react';
 import { AuthContext} from '../state/authState/authContext';
 import { useNavigate } from 'react-router-dom';
 import LoginPopUp from './LoginPopUp';
-import '../Styling/Header.css';
+import '../Styling/landingpage/Header.css';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
