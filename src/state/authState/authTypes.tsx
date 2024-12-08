@@ -4,6 +4,7 @@ export type AuthState = {
     rootEntity: any;
     authEntity: any;
     loginState: LoginState;
+    refreshTimerFlag: boolean;
   }
 
 export type AuthAction = 
@@ -17,6 +18,8 @@ export type AuthAction =
   | { type: 'SET_TOKENS_FROM_COOKIES',payload:  { accessToken: string; refreshToken: string } }
   | { type: 'TOKEN_VALIDATION_SUCCESS', payload: string | null}
   | { type: 'TOKEN_VALIDATION_FAILURE' }
+  | { type: 'SET_REFRESH_TIMER' }
+  | { type: 'CLEAR_REFRESH_TIMER' }
 
 
 
@@ -27,6 +30,7 @@ export type LoginState = {
     startLogOut: boolean;
     inputUsername: string;
     inputPassword: string;
+  
   }
  export interface AuthTokens {
     accessToken: string | null;

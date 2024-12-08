@@ -1,5 +1,6 @@
 import { follow, parse, submit, ActionFiller } from '@siren-js/client';
 import type { Action, Entity } from '@siren-js/client';
+ 
 
 /**
  * Client for making authenticated requests to a Siren API.
@@ -97,11 +98,20 @@ export class AuthenticatedClient {
    * );
    * ```
    */
-  async submitAndParse<T extends object>(action: Action, data?: Record<string, unknown>): Promise<Entity<T>> {
+  async submitAndParse<T extends object>(action: Action, data?: Record<string, unknown>,templateValue?: string): Promise<Entity<T>> {
     try {
       if (data) {
         const filler = new ActionFiller(data);
         action.accept(filler);
+      }
+      //TODO: This is a temporary fix for the template value issue
+      if (action.href.includes('{')) {
+        console.log(action.href);
+        if(templateValue === undefined) {
+          throw new Error('Template value is required');
+        }
+        action.href = action.href.replace(/\{[^}]*\}/g, templateValue);
+        
       }
 
       const response = await submit(action, {
