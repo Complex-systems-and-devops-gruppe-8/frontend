@@ -19,7 +19,7 @@ export class AuthenticatedClient {
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
-    console.log("base url:",this.baseUrl);
+    
   }
 
   setAccessToken(token: string | null) {
