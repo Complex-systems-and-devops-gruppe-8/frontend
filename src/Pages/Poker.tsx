@@ -1,4 +1,4 @@
- import { Link } from "react-router-dom";   
+ import {Link} from "react-router-dom";   
  
 function PokerPage() {
   return (
@@ -12,3 +12,5 @@ function PokerPage() {
 }
 
 export default PokerPage;
+
+

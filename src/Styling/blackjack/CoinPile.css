@@ -1,0 +1,19 @@
+.coin-pile {
+    display: flex; /* Use flexbox to align coins in a row */
+    flex-direction: row; /* Ensure coins are arranged in a row */
+    justify-content: center; /* Center the coins horizontally */
+    align-items: flex-end; /* Align items to the bottom */
+    margin-top: 20px; /* Space above the coin pile */
+}
+
+.coin-pile .coin {
+    margin-left: -40px; /* Use a negative margin to create overlap */
+    
+    position: relative; /* Keep it relative for stacking context */
+    transition: transform 0.2s; /* Optional: smooth transition for hover effect */
+}
+
+/* Optional: Hover effect to emphasize stacking */
+.coin:hover {
+    transform: translateY(-5px); /* Slight upward shift on hover */
+}
