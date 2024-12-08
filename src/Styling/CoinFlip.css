@@ -28,11 +28,11 @@
   }
   
   .coin-image-container.heads .coin-image {
-    background-image: url('../assets/heads.png');
+    background-image: url('../resources/coin/heads.png');
   }
   
   .coin-image-container.tails .coin-image {
-    background-image: url('../assets/tails.png');
+    background-image: url('../resources/coin/tails.png');
   }
   
   .coin-image-container.flip .coin-image {
