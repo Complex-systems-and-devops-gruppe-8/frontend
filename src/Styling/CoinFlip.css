@@ -27,7 +27,6 @@
     transition: transform 1s ease-in-out;
   }
   
-  /* Starting background based on the previous result */
   .coin-image-container.heads .coin-image {
     background-image: url('../assets/heads.png');
   }
@@ -36,12 +35,10 @@
     background-image: url('../assets/tails.png');
   }
   
-  /* Flip animation */
   .coin-image-container.flip .coin-image {
     animation: flip-animation 1s ease-in-out;
   }
   
-  /* Keyframes to flip from the previous result to the new result */
   @keyframes flip-animation {
     0% {
         transform: rotateY(0deg);
