@@ -147,9 +147,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (!state.authEntity || !state.authTokens.accessToken || !state.authTokens.refreshToken) {
       console.log('Missing required data for refresh');
-        console.log('authEntity:', state.authEntity);
-  console.log('accessToken:', state.authTokens.accessToken);
-  console.log('refreshToken:', state.authTokens.refreshToken);
+      //  console.log('authEntity:', state.authEntity);
+  //console.log('accessToken:', state.authTokens.accessToken);
+  //console.log('refreshToken:', state.authTokens.refreshToken);
       
       return;
     }
